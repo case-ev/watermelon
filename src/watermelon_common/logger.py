@@ -20,7 +20,7 @@ class CustomFormatter(logging.Formatter):
     BOLD_RED = "\x1b[31;1m"
     RESET    = "\x1b[0m"
 
-    FMT = "[%(asctime)s] {}%(levelname)s\x1b[0m :: %(message)s",
+    FMT = "[%(asctime)s] {}%(levelname)s\x1b[0m :: %(message)s"
     DATE_FMT = "%Y-%m-%d|%H:%M:%S"
 
     COLORS = {
@@ -40,13 +40,12 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-def setup_logger(quiet, debug, verbose, log_dir):
+def setup_logger(quiet=False, debug=False, verbose=False, log_dir=False):
     global LOGGER
 
     if not quiet:
         # Stream logger
         str_hdl = logging.StreamHandler()
-        # str_hdl.setFormatter(log_fmt)
         str_hdl.setFormatter(CustomFormatter())
         if debug:
             str_hdl.setLevel(logging.DEBUG)
@@ -63,7 +62,6 @@ def setup_logger(quiet, debug, verbose, log_dir):
         file_path = os.path.join(log_dir, f"{file_name}.txt")
         file_hdl = logging.FileHandler(file_path, encoding="utf-8")
         file_hdl.setFormatter(log_fmt)
-        # file_hdl.setFormatter(log_fmt)
         file_hdl.setLevel(logging.DEBUG)
         LOGGER.addHandler(file_hdl)
         LOGGER.debug(f"Log file: {os.path.abspath(file_path)}")
