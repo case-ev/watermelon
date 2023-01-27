@@ -73,6 +73,12 @@ class Graph:
         self._vertices = set()
         self._adj_mat = pd.DataFrame()
 
+    def __repr__(self):
+        return repr(self._adj_mat)
+
+    def __str__(self):
+        return str(self._adj_mat)
+
     @property
     def vertices(self):
         return self._vertices.copy()
