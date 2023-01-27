@@ -1,6 +1,8 @@
 from watermelon.model.vertex_types import EMPTY_VERTEX_TYPE
 from watermelon_common.logger import LOGGER
 
+import matplotlib.pyplot as plt
+import networkx as nx
 import pandas as pd
 import numpy as np
 
@@ -22,7 +24,7 @@ class Vertex:
 
     def __eq__(self, __o):
         return (
-            self.hash == __o.hash
+            hash(self) == hash(__o)
             and self.type == __o.type
             and isinstance(__o, self.__class__)
         )
@@ -124,3 +126,18 @@ class Graph:
 
     def neighbors(self, v):
         return self._adj_mat[v][self._adj_mat[v].isna() == False].keys().to_list()
+
+
+def draw_graph(graph, ax=None, pos_fn=None, **kwargs):
+    # Parse the included graph data structure into the nx adjacency matrix format
+    df = 1 - graph.adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e).isna()
+    df.columns = df.columns.map(lambda c: c.id)
+    df.index = df.index.map(lambda c: c.id)
+    G = nx.from_pandas_adjacency(df, nx.DiGraph)
+
+    if pos_fn is not None:
+        pos = pos_fn(G)
+    else:
+        pos = None
+
+    nx.draw_networkx(G, ax=ax, pos=pos, **kwargs)
