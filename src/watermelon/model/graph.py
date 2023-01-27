@@ -88,6 +88,10 @@ class Graph:
         self._adj_mat[v] = np.nan
         self._adj_mat.loc[v] = np.nan
 
+    def add_vertices(self, vertices):
+        for v in vertices:
+            self.add_vertex(v)
+
     def add_edge(self, e):
         LOGGER.debug(f"Adding edge {e}")
         if self._vertices.get(e.origin) is None:
@@ -98,6 +102,10 @@ class Graph:
             self.add_vertex(e.target)
 
         self._adj_mat[e.origin][e.target] = e
+
+    def add_edges(self, edges):
+        for e in edges:
+            self.add_edge(e)
 
     def get_vertex(self, vert_id):
         return self._verts_id[vert_id]
