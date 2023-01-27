@@ -100,14 +100,14 @@ class Graph:
 
     def add_edge(self, e):
         LOGGER.debug(f"Adding edge {e}")
-        if self._vertices.get(e.origin) is None:
+        if e.origin not in self._vertices:
             LOGGER.warning(f"Vertex {e.origin} was not found. Registering it")
             self.add_vertex(e.origin)
-        if self._vertices.get(e.target) is None:
+        if e.target not in self._vertices:
             LOGGER.warning(f"Vertex {e.target} was not found. Registering it")
             self.add_vertex(e.target)
 
-        self._adj_mat[e.origin][e.target] = e
+        self._adj_mat.at[e.origin, e.target] = e
 
     def add_edges(self, edges):
         for e in edges:
