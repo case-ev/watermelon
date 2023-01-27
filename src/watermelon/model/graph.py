@@ -77,7 +77,7 @@ class Graph:
         return repr(self._adj_mat)
 
     def __str__(self):
-        return str(self._adj_mat)
+        return str(self._adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e))
 
     @property
     def vertices(self):
@@ -120,7 +120,7 @@ class Graph:
         return self._adj_mat[v][u]
 
     def adjacent(self, v, u):
-        return not np.isnan(self.get_edge(v, u))
+        return not pd.isnull(self.get_edge(v, u))
 
     def neighbors(self, v):
         return self._adj_mat[v][self._adj_mat[v].isna() == False].keys().to_list()
