@@ -8,6 +8,7 @@ class Vertex:
     The identifier must be a hashable type, and if the type is omitted
     then it is assumed to be an empty vertex.
     """
+
     def __init__(self, identifier, vertex_type=EMPTY_VERTEX_TYPE):
         self._id = identifier
         self._id_hash = hash(identifier)
@@ -17,7 +18,11 @@ class Vertex:
         return self.hash
 
     def __eq__(self, __o):
-        return self.hash == __o.hash and self.type == __o.type
+        return (
+            self.hash == __o.hash
+            and self.type == __o.type
+            and isinstance(__o, self.__class__)
+        )
 
     def __repr__(self):
         return f"{repr(self.type)}({repr(self.id)})"
@@ -39,6 +44,20 @@ class Edge:
         self.origin = origin
         self.target = target
         self.weight = weight
+
+    def __eq__(self, __o):
+        return (
+            self.origin == __o.origin
+            and self.target == __o.target
+            and self.weight == __o.weight
+            and isinstance(__o, self.__class__)
+        )
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({repr(self.origin)}->{repr(self.target)}; {repr(self.weight)})"
+
+    def __str__(self):
+        return f"({str(self.origin)}->{str(self.target)}; {str(self.weight)})"
 
 
 class Graph:
