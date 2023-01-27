@@ -6,21 +6,26 @@ class VertexType(abc.ABC):
     """Base interface for a node type."""
 
     @abc.abstractstaticmethod
-    def _char(self):
+    def _char():
         pass
 
-    def __repr__(self):
-        return self.__class__.__name__
+    @classmethod
+    def __repr__(cls):
+        return cls.__class__.__name__
 
-    def __str__(self):
-        return self._char()
+    @classmethod
+    def __str__(cls):
+        return cls._char()
 
 
-class EMPTY_VERTEX_TYPE(VertexType):
+class __EmptyVertexType(VertexType):
     """Empty node."""
 
     ACTIONS = [NULL_ACTION]
 
     @staticmethod
-    def _char(self):
+    def _char():
         return "\u03b8"  # theta
+
+
+EMPTY_VERTEX_TYPE = __EmptyVertexType()
