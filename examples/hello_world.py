@@ -1,5 +1,8 @@
-from watermelon.model import Edge, Graph, Vertex, EMPTY_VERTEX_TYPE
+from watermelon.model import Edge, Graph, Vertex, draw_graph
 from watermelon_common.logger import LOGGER
+
+import networkx as nx
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -9,6 +12,7 @@ def main():
     LOGGER.info("Initializing graph")
     graph = Graph()
     graph.add_vertices(verts)
+    print("Graph without edges")
     print(graph)
 
     LOGGER.info("Creating edges")
@@ -22,6 +26,18 @@ def main():
         Edge(Vertex(4), Vertex(3), 7),
         Edge(Vertex(3), Vertex(1), 2),
     ])
+    print("\nGraph with edges")
+    print(graph)
+
+    LOGGER.info("Drawing graph")
+    fig, ax = plt.subplots()
+    draw_graph(graph, ax=ax)
+
+    fig.suptitle("Hello World!")
+    ax.set_xlabel("X axis")
+    ax.set_ylabel("Y axis")
+
+    plt.show()
 
 
 if __name__ == "__main__":
