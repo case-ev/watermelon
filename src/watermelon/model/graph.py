@@ -82,12 +82,14 @@ class Graph:
         return self._adj_mat.copy()
 
     def add_vertex(self, v):
+        LOGGER.debug(f"Adding vertex {v}")
         self._vertices.add(v)
         self._verts_id[v.id] = v
         self._adj_mat[v] = np.nan
         self._adj_mat.loc[v] = np.nan
 
     def add_edge(self, e):
+        LOGGER.debug(f"Adding edge {e}")
         if self._vertices.get(e.origin) is None:
             LOGGER.warning(f"Vertex {e.origin} was not found. Registering it")
             self.add_vertex(e.origin)
@@ -100,11 +102,11 @@ class Graph:
     def get_vertex(self, vert_id):
         return self._verts_id[vert_id]
 
-    def get_edge(self, u, v):
-        return self._adj_mat[u][v]
+    def get_edge(self, v, u):
+        return self._adj_mat[v][u]
 
-    def adjacent(self, u, v):
-        return not np.isnan(self.get_edge(u, v))
+    def adjacent(self, v, u):
+        return not np.isnan(self.get_edge(v, u))
 
     def neighbors(self, v):
         return self._adj_mat[v][self._adj_mat[v].isna() == False].keys().to_list()
