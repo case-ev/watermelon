@@ -26,7 +26,7 @@ class CustomFormatter(logging.Formatter):
 
     COLORS = {
         logging.DEBUG: GREY,
-        logging.INFO: GREY,
+        logging.INFO: GREEN,
         logging.WARNING: YELLOW,
         logging.ERROR: RED,
         logging.CRITICAL: BOLD_RED,
