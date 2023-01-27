@@ -20,4 +20,4 @@ class EMPTY_VERTEX_TYPE(VertexType):
 
     @staticmethod
     def _char(self):
-        return "\u03b1"
+        return "\u03b8"     # theta
