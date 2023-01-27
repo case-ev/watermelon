@@ -1,6 +1,9 @@
 from watermelon.model.vertex_types import EMPTY_VERTEX_TYPE
 from watermelon_common.logger import LOGGER
 
+import pandas as pd
+import numpy as np
+
 
 class Vertex:
     """Vertex of a graph, which has a certain type and identifier.
@@ -40,6 +43,8 @@ class Vertex:
 
 
 class Edge:
+    """Edge connecting two vertices."""
+
     def __init__(self, origin, target, weight=None):
         self.origin = origin
         self.target = target
@@ -61,25 +66,45 @@ class Edge:
 
 
 class Graph:
+    """Data structure for an abstract graph."""
+
     def __init__(self):
-        self.vertices = set()
-        self.edges = {}
+        self._verts_id = {}
+        self._vertices = set()
+        self._adj_mat = pd.DataFrame()
 
-    def register_vertex(self, vertex):
-        self.vertices.add(vertex)
+    @property
+    def vertices(self):
+        return self._vertices.copy()
 
-    def register_edge(self, edge):
-        if self.vertices.get(edge.origin) is None:
-            LOGGER.warning(f"Vertex {edge.origin} was not found. Registering it")
-            self.register_vertex(edge.origin)
-        if self.vertices.get(edge.target) is None:
-            LOGGER.warning(f"Vertex {edge.target} was not found. Registering it")
-            self.register_vertex(edge.target)
+    @property
+    def adj_mat(self):
+        return self._adj_mat.copy()
 
-        if self.edges.get(edge.origin, edge.target) is None:
-            self.edges[(edge.origin, edge.target)] = [edge]
-        else:
-            self.edges[(edge.origin, edge.target)].append(edge)
+    def add_vertex(self, v):
+        self._vertices.add(v)
+        self._verts_id[v.id] = v
+        self._adj_mat[v] = np.nan
+        self._adj_mat.loc[v] = np.nan
 
-    def get_edge(self, origin, target):
-        return self.edges.get((origin, target))
+    def add_edge(self, e):
+        if self._vertices.get(e.origin) is None:
+            LOGGER.warning(f"Vertex {e.origin} was not found. Registering it")
+            self.add_vertex(e.origin)
+        if self._vertices.get(e.target) is None:
+            LOGGER.warning(f"Vertex {e.target} was not found. Registering it")
+            self.add_vertex(e.target)
+
+        self._adj_mat[e.origin][e.target] = e
+
+    def get_vertex(self, vert_id):
+        return self._verts_id[vert_id]
+
+    def get_edge(self, u, v):
+        return self._adj_mat[u][v]
+
+    def adjacent(self, u, v):
+        return not np.isnan(self.get_edge(u, v))
+
+    def neighbors(self, v):
+        return self._adj_mat[v][self._adj_mat[v].isna() == False].keys().to_list()
