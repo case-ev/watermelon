@@ -140,4 +140,7 @@ def draw_graph(graph, ax=None, pos_fn=None, **kwargs):
     else:
         pos = None
 
-    nx.draw_networkx(G, ax=ax, pos=pos, **kwargs)
+    weights = [graph.adj_mat[graph.get_vertex(v)][graph.get_vertex(u)].weight for u, v in G.edges()]
+    weights_max = max(weights)
+    weights = [(1 - w / weights_max, 1 - w / weights_max, 1 - w / weights_max) for w in weights]
+    nx.draw_networkx(G, ax=ax, pos=pos, edge_color=weights, **kwargs)
