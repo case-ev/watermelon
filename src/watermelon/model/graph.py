@@ -1,7 +1,6 @@
 from watermelon.model.vertex_types import EMPTY_VERTEX_TYPE
 from watermelon_common.logger import LOGGER
 
-import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
 import numpy as np
@@ -79,7 +78,9 @@ class Graph:
         return repr(self._adj_mat)
 
     def __str__(self):
-        return str(self._adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e))
+        return str(
+            self._adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e)
+        )
 
     @property
     def vertices(self):
@@ -130,7 +131,9 @@ class Graph:
 
 def draw_graph(graph, ax=None, pos_fn=None, **kwargs):
     # Parse the included graph data structure into the nx adjacency matrix format
-    df = 1 - graph.adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e).isna()
+    df = (
+        1 - graph.adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e).isna()
+    )
     df.columns = df.columns.map(lambda c: c.id)
     df.index = df.index.map(lambda c: c.id)
     G = nx.from_pandas_adjacency(df, nx.DiGraph)
@@ -140,7 +143,12 @@ def draw_graph(graph, ax=None, pos_fn=None, **kwargs):
     else:
         pos = None
 
-    weights = [graph.adj_mat[graph.get_vertex(v)][graph.get_vertex(u)].weight for u, v in G.edges()]
+    weights = [
+        graph.adj_mat[graph.get_vertex(v)][graph.get_vertex(u)].weight
+        for u, v in G.edges()
+    ]
     weights_max = max(weights)
-    weights = [(1 - w / weights_max, 1 - w / weights_max, 1 - w / weights_max) for w in weights]
+    weights = [
+        (1 - w / weights_max, 1 - w / weights_max, 1 - w / weights_max) for w in weights
+    ]
     nx.draw_networkx(G, ax=ax, pos=pos, edge_color=weights, **kwargs)
