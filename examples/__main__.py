@@ -66,7 +66,9 @@ for arg in map(lambda x: x.split("="), cmd_args.args[1:]):
         ex_args.extend(arg)
 
 # Run the example
-print(f"\nExecuting example '\x1b[32;20m{name}\x1b[0m' with args {ex_args} and kwargs {ex_kwargs}\n")
+print(
+    f"\nExecuting example '\x1b[32;20m{name}\x1b[0m' with args {ex_args} and kwargs {ex_kwargs}\n"
+)
 LOGGER.info(f"Importing example {name}")
 mod = importlib.import_module(f"examples.{name}")
 LOGGER.info(f"Running main function")

@@ -12,16 +12,18 @@ def main(delta=1e-3):
 
     verts = [Vertex(i) for i in range(5)]
     graph.add_vertices(verts)
-    graph.add_edges([
-        Edge(Vertex(0), Vertex(1), 10),
-        Edge(Vertex(1), Vertex(0), 4),
-        Edge(Vertex(0), Vertex(2), 3),
-        Edge(Vertex(2), Vertex(1), 2),
-        Edge(Vertex(2), Vertex(4), 6),
-        Edge(Vertex(4), Vertex(2), 2),
-        Edge(Vertex(4), Vertex(3), 7),
-        Edge(Vertex(3), Vertex(1), 2),
-    ])
+    graph.add_edges(
+        [
+            Edge(Vertex(0), Vertex(1), 10),
+            Edge(Vertex(1), Vertex(0), 4),
+            Edge(Vertex(0), Vertex(2), 3),
+            Edge(Vertex(2), Vertex(1), 2),
+            Edge(Vertex(2), Vertex(4), 6),
+            Edge(Vertex(4), Vertex(2), 2),
+            Edge(Vertex(4), Vertex(3), 7),
+            Edge(Vertex(3), Vertex(1), 2),
+        ]
+    )
 
     LOGGER.info("Creating agents")
     agents = [Agent(i, graph, [Decision(Vertex(0), NULL_ACTION)]) for i in range(2)]
