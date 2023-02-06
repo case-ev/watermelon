@@ -32,7 +32,9 @@ def main(delta=1e-3):
     sim = Simulator(graph, agents, delta)
     sim.start()
 
+    LOGGER.info("Going into main loop")
     while sim.time <= 1:
         sim.update()
 
+    LOGGER.info("Finished simulation, showing results")
     print(sim.data_extractor.data)
