@@ -7,7 +7,7 @@ LOGGER = logging.Logger("watermelon")
 
 # Formatter for the files
 log_fmt = logging.Formatter(
-    fmt="[%(asctime)s] %(levelname)s :: %(message)s",
+    fmt="[%(asctime)s](%(filename)s:%(lineno)d) %(levelname)s :: %(message)s",
     datefmt="%Y-%m-%d|%H:%M:%S",
 )
 
@@ -15,17 +15,18 @@ log_fmt = logging.Formatter(
 # Formatter for the console
 class CustomFormatter(logging.Formatter):
     GREY = "\x1b[38;20m"
+    CYAN = "\x1b[36;20m"
     YELLOW = "\x1b[33;20m"
     GREEN = "\x1b[32;20m"
     RED = "\x1b[31;20m"
     BOLD_RED = "\x1b[31;1m"
     RESET = "\x1b[0m"
 
-    FMT = "[%(asctime)s] {}%(levelname)s\x1b[0m :: %(message)s"
+    FMT = "\x1b[45m[%(asctime)s](%(filename)s:%(lineno)d)\x1b[49m\x1b[0m {}%(levelname)s\x1b[0m :: %(message)s"
     DATE_FMT = "%Y-%m-%d|%H:%M:%S"
 
     COLORS = {
-        logging.DEBUG: GREY,
+        logging.DEBUG: CYAN,
         logging.INFO: GREEN,
         logging.WARNING: YELLOW,
         logging.ERROR: RED,
