@@ -31,4 +31,8 @@ def main(delta=1e-3):
     LOGGER.info("Initializing simulation")
     sim = Simulator(graph, agents, delta)
     sim.start()
-    print(sim.data_handler.data)
+
+    while sim.time <= 1:
+        sim.update()
+
+    print(sim.data_extractor.data)
