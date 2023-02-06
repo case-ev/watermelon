@@ -1,4 +1,4 @@
-from watermelon.sim.data_handler import DataExtractor
+from watermelon.sim.data_extractor import DataExtractor
 import numpy as np
 
 
@@ -11,8 +11,8 @@ class Simulator:
         self.time = 0.0
         self.state = np.array([a.actions[0] for a in agents])
 
-    def start(self):
-        self.data_handler = DataExtractor(
+    def start(self, extractor_cls=DataExtractor):
+        self.data_extractor = extractor_cls(
             data={
                 **{"time": [0]},
                 **{a: action for a, action in zip(self.agents, self.state)},
@@ -21,3 +21,7 @@ class Simulator:
 
     def update(self):
         self.time += self.delta
+
+        # State update code ...
+
+        self.data_extractor.append(self)
