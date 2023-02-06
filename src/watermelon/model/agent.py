@@ -11,6 +11,22 @@ class Agent:
         else:
             self.actions = actions
 
+    def __hash__(self):
+        return self.hash
+
+    def __eq__(self, __o):
+        return (
+            hash(self) == hash(__o)
+            and self.type == __o.type
+            and isinstance(__o, self.__class__)
+        )
+
+    def __repr__(self):
+        return f"Agent({repr(self.id)})"
+
+    def __str__(self):
+        return f"Agent({str(self.id)})"
+
     @property
     def id(self):
         return self._id
