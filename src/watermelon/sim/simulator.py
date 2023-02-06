@@ -9,13 +9,13 @@ class Simulator:
         self.data_handler = None
         self.delta = delta
         self.time = 0.0
-        self.state = np.array([[a.actions[0] for a in agents]])
+        self.state = np.array([a.actions[0] for a in agents])
 
     def start(self):
         self.data_handler = DataExtractor(
             data={
                 **{"time": [0]},
-                **{a: action for a, action in zip(self.agents, self.state[0])},
+                **{a: action for a, action in zip(self.agents, self.state)},
             }
         )
 
