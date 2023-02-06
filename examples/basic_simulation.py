@@ -1,5 +1,4 @@
-from watermelon.sim.simulator import Simulator
-from watermelon.model import Agent, Graph, Vertex, Edge, NULL_ACTION, Decision
+import watermelon as wm
 from watermelon_common.logger import LOGGER
 
 
@@ -8,28 +7,31 @@ def main(delta=1e-3):
     delta = float(delta)
 
     LOGGER.info("Creating environment")
-    graph = Graph()
+    graph = wm.Graph()
 
-    verts = [Vertex(i) for i in range(5)]
+    verts = [wm.Vertex(i) for i in range(5)]
     graph.add_vertices(verts)
     graph.add_edges(
         [
-            Edge(Vertex(0), Vertex(1), 10),
-            Edge(Vertex(1), Vertex(0), 4),
-            Edge(Vertex(0), Vertex(2), 3),
-            Edge(Vertex(2), Vertex(1), 2),
-            Edge(Vertex(2), Vertex(4), 6),
-            Edge(Vertex(4), Vertex(2), 2),
-            Edge(Vertex(4), Vertex(3), 7),
-            Edge(Vertex(3), Vertex(1), 2),
+            wm.Edge(wm.Vertex(0), wm.Vertex(1), 10),
+            wm.Edge(wm.Vertex(1), wm.Vertex(0), 4),
+            wm.Edge(wm.Vertex(0), wm.Vertex(2), 3),
+            wm.Edge(wm.Vertex(2), wm.Vertex(1), 2),
+            wm.Edge(wm.Vertex(2), wm.Vertex(4), 6),
+            wm.Edge(wm.Vertex(4), wm.Vertex(2), 2),
+            wm.Edge(wm.Vertex(4), wm.Vertex(3), 7),
+            wm.Edge(wm.Vertex(3), wm.Vertex(1), 2),
         ]
     )
 
     LOGGER.info("Creating agents")
-    agents = [Agent(i, graph, [Decision(Vertex(0), NULL_ACTION)]) for i in range(2)]
+    agents = [
+        wm.Agent(i, graph, [wm.Decision(wm.Vertex(0), wm.NULL_ACTION)])
+        for i in range(2)
+    ]
 
     LOGGER.info("Initializing simulation")
-    sim = Simulator(graph, agents, delta=delta)
+    sim = wm.sim.Simulator(graph, agents, delta=delta)
     sim.start()
 
     LOGGER.info("Going into main loop")
