@@ -3,7 +3,7 @@ import numpy as np
 
 
 class Simulator:
-    def __init__(self, graph, agents, delta=1e-3):
+    def __init__(self, graph, agents, *, delta=1e-3):
         self.graph = graph
         self.agents = agents
         self.data_handler = None

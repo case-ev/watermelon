@@ -29,7 +29,7 @@ def main(delta=1e-3):
     agents = [Agent(i, graph, [Decision(Vertex(0), NULL_ACTION)]) for i in range(2)]
 
     LOGGER.info("Initializing simulation")
-    sim = Simulator(graph, agents, delta)
+    sim = Simulator(graph, agents, delta=delta)
     sim.start()
 
     LOGGER.info("Going into main loop")
