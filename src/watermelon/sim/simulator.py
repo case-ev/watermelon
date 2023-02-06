@@ -1,4 +1,4 @@
-from watermelon.sim.data_extractor import DataExtractor
+from watermelon.sim.data_extractor import DataFrameExtractor
 import numpy as np
 
 
@@ -11,7 +11,7 @@ class Simulator:
         self.time = 0.0
         self.state = np.array([a.actions[0] for a in agents])
 
-    def start(self, extractor_cls=DataExtractor):
+    def start(self, extractor_cls=DataFrameExtractor):
         self.data_extractor = extractor_cls(
             data={
                 **{"time": [0]},

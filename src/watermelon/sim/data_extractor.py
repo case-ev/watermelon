@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-class DataExtractor:
+class DataFrameExtractor:
     def __init__(self, *args, **kwargs):
         self.data = pd.DataFrame(*args, **kwargs)
 
