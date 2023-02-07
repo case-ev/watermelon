@@ -1,8 +1,12 @@
+from watermelon.model.state import AgentState
+
+
 class Agent:
-    def __init__(self, identifier, graph, actions=None):
+    def __init__(self, identifier, graph, initial_state=AgentState(), actions=None):
         self._id = identifier
         self._id_hash = hash(identifier)
         self.graph = graph
+        self.state = initial_state
 
         # Each element in `actions` is a 2-tuple of a vertex
         # and an action.
