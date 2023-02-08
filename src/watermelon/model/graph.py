@@ -29,7 +29,7 @@ class Vertex:
         )
 
     def __repr__(self):
-        return f"{repr(self.type)}({repr(self.id)})"
+        return f"Vertex(id={repr(self.id)}, type={repr(self.type)})"
 
     def __str__(self):
         return f"{str(self.type)}({str(self.id)})"
@@ -64,10 +64,10 @@ class Edge:
         )
 
     def __repr__(self):
-        return f"{self.__class__.__name__}({repr(self.origin)}->{repr(self.target)}; {repr(self.weight)})"
+        return f"Edge(origin={repr(self.origin)}, target={repr(self.target)}, weight={repr(self.weight)}, time={repr(self.time)})"
 
     def __str__(self):
-        return f"({str(self.origin)}->{str(self.target)}; {str(self.weight)})"
+        return f"({str(self.origin)}->{str(self.target)}; w={str(self.weight)}, t={str(self.time)})"
 
 
 class Graph:
@@ -86,6 +86,9 @@ class Graph:
             self._adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e)
         )
 
+    # def __getitem__(self, vertex_id):
+    #     if isinstance(vertex_id, tuple):
+
     @property
     def vertices(self):
         return self._vertices.copy()
@@ -97,7 +100,7 @@ class Graph:
     def add_vertex(self, v):
         LOGGER.debug(f"Adding vertex {v}")
         self._vertices.add(v)
-        self._verts_id[v.id] = v
+        self._verts_id[v.hash] = v
         self._adj_mat[v] = np.nan
         self._adj_mat.loc[v] = np.nan
 
@@ -121,7 +124,7 @@ class Graph:
             self.add_edge(e)
 
     def get_vertex(self, vert_id):
-        return self._verts_id[vert_id]
+        return self._verts_id[hash(vert_id)]
 
     def get_edge(self, v, u):
         return self._adj_mat[v][u]

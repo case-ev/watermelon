@@ -10,10 +10,6 @@ class VertexType(abc.ABC):
         pass
 
     @classmethod
-    def __repr__(cls):
-        return cls.__class__.__name__
-
-    @classmethod
     def __str__(cls):
         return cls._char()
 
@@ -22,6 +18,10 @@ class __EmptyVertexType(VertexType):
     """Empty node."""
 
     ACTIONS = [NULL_ACTION]
+
+    @staticmethod
+    def __repr__():
+        return "EMPTY_VERTEX_TYPE"
 
     @staticmethod
     def _char():
