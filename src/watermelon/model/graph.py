@@ -1,16 +1,22 @@
-from watermelon.model.vertex_types import EmptyVertexType
-from watermelon_common.logger import LOGGER
+"""
+watermelon.model.graph
+----------------------
+Modelling of the graph that represents the environment.
+"""
 
 import networkx as nx
 import pandas as pd
 import numpy as np
 
+from watermelon.model.vertex_types import EmptyVertexType
+from watermelon_common.logger import LOGGER
+
 
 class Vertex:
-    """Vertex of a graph, which has a certain type and identifier.
+    """Vertex of a graph, which has a certain type and identifier
 
     The identifier must be a hashable type, and if the type is omitted
-    then it is assumed to be an empty vertex.
+    then it is assumed to be an empty vertex
     """
 
     def __init__(self, identifier, vertex_type=EmptyVertexType()):
@@ -36,15 +42,17 @@ class Vertex:
 
     @property
     def id(self):
+        """Unique ID of the vertex"""
         return self._id
 
     @property
     def hash(self):
+        """Hash of the unique ID of the vertex"""
         return self._id_hash
 
 
 class Edge:
-    """Edge connecting two vertices."""
+    """Edge connecting two vertices"""
 
     def __init__(self, origin, target, weight=None, time=None):
         self.origin = origin
@@ -64,14 +72,15 @@ class Edge:
         )
 
     def __repr__(self):
-        return f"Edge(origin={repr(self.origin)}, target={repr(self.target)}, weight={repr(self.weight)}, time={repr(self.time)})"
+        return f"Edge(origin={repr(self.origin)}, target={repr(self.target)}, \
+weight={repr(self.weight)}, time={repr(self.time)})"
 
     def __str__(self):
         return f"({str(self.origin)}->{str(self.target)}; w={str(self.weight)}, t={str(self.time)})"
 
 
 class Graph:
-    """Data structure for an abstract graph."""
+    """Data structure for an abstract graph"""
 
     def __init__(self):
         self._verts_id = {}
@@ -91,52 +100,125 @@ class Graph:
 
     @property
     def vertices(self):
+        """Vertices within the graph"""
         return self._vertices.copy()
 
     @property
     def adj_mat(self):
+        """Adjacency matrix of the graph, which codifies the edges"""
         return self._adj_mat.copy()
 
-    def add_vertex(self, v):
-        LOGGER.debug(f"Adding vertex {v}")
-        self._vertices.add(v)
-        self._verts_id[v.hash] = v
-        self._adj_mat[v] = np.nan
-        self._adj_mat.loc[v] = np.nan
+    def add_vertex(self, vertex):
+        """Add a vertex to the graph
+
+        Parameters
+        ----------
+        vertex : watermelon.model.Vertex
+            Vertex to add to the graph
+
+        Returns
+        -------
+        self
+        """
+        LOGGER.debug(f"Adding vertex {vertex}")
+        self._vertices.add(vertex)
+        self._verts_id[vertex.hash] = vertex
+        self._adj_mat[vertex] = np.nan
+        self._adj_mat.loc[vertex] = np.nan
+        return self
 
     def add_vertices(self, vertices):
+        """Add a group of vertices to the graph
+
+        Parameters
+        ----------
+        vertices : iterable of watermelon.model.Vertex
+            Iterable where each iteration yields a vertex
+
+        Returns
+        -------
+        self
+        """
         for v in vertices:
             self.add_vertex(v)
+        return self
 
-    def add_edge(self, e):
-        LOGGER.debug(f"Adding edge {e}")
-        if e.origin not in self._vertices:
-            LOGGER.warning(f"Vertex {e.origin} was not found. Registering it")
-            self.add_vertex(e.origin)
-        if e.target not in self._vertices:
-            LOGGER.warning(f"Vertex {e.target} was not found. Registering it")
-            self.add_vertex(e.target)
+    def add_edge(self, edge):
+        """Add an edge to the graph
 
-        self._adj_mat.at[e.origin, e.target] = e
+        If the vertices are not found in the graph, it adds them first
+
+        Parameters
+        ----------
+        e : watermelon.model.Edge
+            Edge connecting two vertices
+
+        Returns
+        -------
+        self
+        """
+        LOGGER.debug(f"Adding edge {edge}")
+        if edge.origin not in self._vertices:
+            LOGGER.warning(f"Vertex {edge.origin} was not found. Registering it")
+            self.add_vertex(edge.origin)
+        if edge.target not in self._vertices:
+            LOGGER.warning(f"Vertex {edge.target} was not found. Registering it")
+            self.add_vertex(edge.target)
+
+        self._adj_mat.at[edge.origin, edge.target] = edge
+        return self
 
     def add_edges(self, edges):
+        """Add a group of edges to the graph
+
+        If the vertices are not found in the graph, it adds them first
+
+        Parameters
+        ----------
+        edges : iterable of watermelon.model.Edge
+            Iterable that yields edges to be added
+
+        Returns
+        -------
+        self
+        """
         for e in edges:
             self.add_edge(e)
+        return self
 
     def get_vertex(self, vert_id):
+        """Get the vertex associated with a given ID"""
         return self._verts_id[hash(vert_id)]
 
-    def get_edge(self, v, u):
-        return self._adj_mat[v][u]
+    def get_edge(self, vert1, vert2):
+        """Get the edge that connects two vertices"""
+        return self._adj_mat[vert1][vert2]
 
-    def adjacent(self, v, u):
-        return not pd.isnull(self.get_edge(v, u))
+    def adjacent(self, vert1, vert2):
+        """Indicate whether two vertices are adjacent"""
+        return not pd.isnull(self.get_edge(vert1, vert2))
 
-    def neighbors(self, v):
-        return self._adj_mat[v][self._adj_mat[v].isna() == False].keys().to_list()
+    def neighbors(self, vertex):
+        """Get the neighbors of a vertex"""
+        return self._adj_mat[vertex][self._adj_mat[vertex].isna() == False].keys().to_list()
 
 
 def draw_graph(graph, ax=None, pos_fn=None, **kwargs):
+    """Draw a graph using matplotlib
+
+    It takes the graph, turns it into the convention used by networkx by taking the
+    adjacency matrix first, and then draws it
+
+    Parameters
+    ----------
+    graph : watermelon.model.Graph
+        Graph to draw
+    ax : matplotlib.pyplot.Axes, optional
+        Axis to draw the graph on, by default None. If None, it creates a new figure
+        and axis.
+    pos_fn : function_, optional
+        Function to use to determine the position of the vertices, by default None.
+    """
     # Parse the included graph data structure into the nx adjacency matrix format
     df = (
         1 - graph.adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e).isna()

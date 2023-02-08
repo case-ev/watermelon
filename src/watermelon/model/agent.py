@@ -1,7 +1,14 @@
+"""
+watermelon.model.agent
+----------------------
+Modelling of the agent and its decisions.
+"""
+
 from watermelon.model.state import AgentState
 
 
 class Agent:
+    """Agent in a graph."""
     def __init__(self, identifier, graph, actions=None, initial_state=AgentState()):
         self._id = identifier
         self._id_hash = hash(identifier)
@@ -21,7 +28,8 @@ class Agent:
     def __eq__(self, __o):
         return (
             hash(self) == hash(__o)
-            and self.type == __o.type
+            and self.graph == __o.graph
+            and self.actions == __o.actions
             and isinstance(__o, self.__class__)
         )
 
@@ -33,8 +41,10 @@ class Agent:
 
     @property
     def id(self):
+        """Unique ID of the agent."""
         return self._id
 
     @property
     def hash(self):
+        """Hash of the unique ID of the agent."""
         return self._id_hash
