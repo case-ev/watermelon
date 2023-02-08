@@ -1,4 +1,15 @@
+"""
+watermelon.model.vertex_actions
+-------------------------------
+Types of actions that the agents can take
+"""
+
+import abc
+
+
 class Decision:
+    """Decision containing an action and a tuple"""
+
     def __init__(self, vertex, action):
         self.vertex = vertex
         self.action = action
@@ -11,6 +22,13 @@ class Decision:
 
 
 class VertexAction:
+    """Type of action"""
+
+    @staticmethod
+    @abc.abstractmethod
+    def _char():
+        pass
+
     @classmethod
     def __repr__(cls):
         return cls.__class__.__name__
@@ -20,10 +38,9 @@ class VertexAction:
         return cls._char()
 
 
-class __NullAction(VertexAction):
+class NullAction(VertexAction):
+    """Action that represents not doing anything"""
+
     @staticmethod
     def _char():
         return "\u03d5"  # phi
-
-
-NULL_ACTION = __NullAction()

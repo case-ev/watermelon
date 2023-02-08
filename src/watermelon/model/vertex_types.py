@@ -1,11 +1,19 @@
+"""
+watermelon.model.vertex_types
+-----------------------------
+Types of vertices
+"""
+
 import abc
-from watermelon.model.vertex_actions import NULL_ACTION
+
+from watermelon.model.vertex_actions import NullAction
 
 
 class VertexType(abc.ABC):
     """Base interface for a node type."""
 
-    @abc.abstractstaticmethod
+    @staticmethod
+    @abc.abstractmethod
     def _char():
         pass
 
@@ -23,7 +31,7 @@ class VertexType(abc.ABC):
 class EmptyVertexType(VertexType):
     """Empty node."""
 
-    ACTIONS = [NULL_ACTION]
+    ACTIONS = [NullAction()]
 
     @staticmethod
     def _char():
