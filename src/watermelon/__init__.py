@@ -1,7 +1,8 @@
 """
 Watermelon
 ==========
-*Watermelon* is a program to model and simulate graphs, which 
+*Watermelon* is a program to model and simulate graphs, which
+hola jorge
 """
 
 from .model import *
