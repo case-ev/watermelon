@@ -8,8 +8,8 @@ import networkx as nx
 import pandas as pd
 import numpy as np
 
-from watermelon.model.vertex_types import EmptyVertexType
 from watermelon_common.logger import LOGGER
+from watermelon.model.vertex_types import EmptyVertexType
 
 
 class Vertex:
@@ -120,7 +120,7 @@ class Graph:
         -------
         self
         """
-        LOGGER.debug(f"Adding vertex {vertex}")
+        LOGGER.debug("Adding vertex %s", vertex)
         self._vertices.add(vertex)
         self._verts_id[vertex.hash] = vertex
         self._adj_mat[vertex] = np.nan
@@ -139,8 +139,8 @@ class Graph:
         -------
         self
         """
-        for v in vertices:
-            self.add_vertex(v)
+        for vertex in vertices:
+            self.add_vertex(vertex)
         return self
 
     def add_edge(self, edge):
@@ -157,12 +157,12 @@ class Graph:
         -------
         self
         """
-        LOGGER.debug(f"Adding edge {edge}")
+        LOGGER.debug("Adding edge %s", edge)
         if edge.origin not in self._vertices:
-            LOGGER.warning(f"Vertex {edge.origin} was not found. Registering it")
+            LOGGER.warning("Vertex %s was not found. Registering it", edge.origin)
             self.add_vertex(edge.origin)
         if edge.target not in self._vertices:
-            LOGGER.warning(f"Vertex {edge.target} was not found. Registering it")
+            LOGGER.warning("Vertex %s was not found. Registering it", edge.target)
             self.add_vertex(edge.target)
 
         self._adj_mat.at[edge.origin, edge.target] = edge
@@ -182,8 +182,8 @@ class Graph:
         -------
         self
         """
-        for e in edges:
-            self.add_edge(e)
+        for edge in edges:
+            self.add_edge(edge)
         return self
 
     def get_vertex(self, vert_id):
@@ -200,10 +200,14 @@ class Graph:
 
     def neighbors(self, vertex):
         """Get the neighbors of a vertex"""
-        return self._adj_mat[vertex][self._adj_mat[vertex].isna() == False].keys().to_list()
+        return (
+            self._adj_mat[vertex][self._adj_mat[vertex].isna().map(lambda x: not x)]
+            .keys()
+            .to_list()
+        )
 
 
-def draw_graph(graph, ax=None, pos_fn=None, **kwargs):
+def draw_graph(graph, axis=None, pos_fn=None, **kwargs):
     """Draw a graph using matplotlib
 
     It takes the graph, turns it into the convention used by networkx by taking the
@@ -213,7 +217,7 @@ def draw_graph(graph, ax=None, pos_fn=None, **kwargs):
     ----------
     graph : watermelon.model.Graph
         Graph to draw
-    ax : matplotlib.pyplot.Axes, optional
+    axis : matplotlib.pyplot.Axes, optional
         Axis to draw the graph on, by default None. If None, it creates a new figure
         and axis.
     pos_fn : function_, optional
@@ -225,19 +229,19 @@ def draw_graph(graph, ax=None, pos_fn=None, **kwargs):
     )
     df.columns = df.columns.map(lambda c: c.id)
     df.index = df.index.map(lambda c: c.id)
-    G = nx.from_pandas_adjacency(df, nx.DiGraph)
+    nx_graph = nx.from_pandas_adjacency(df, nx.DiGraph)
 
     if pos_fn is not None:
-        pos = pos_fn(G)
+        pos = pos_fn(nx_graph)
     else:
         pos = None
 
     weights = [
         graph.adj_mat[graph.get_vertex(v)][graph.get_vertex(u)].weight
-        for u, v in G.edges()
+        for u, v in nx_graph.edges()
     ]
     weights_max = max(weights)
     weights = [
         (1 - w / weights_max, 1 - w / weights_max, 1 - w / weights_max) for w in weights
     ]
-    nx.draw_networkx(G, ax=ax, pos=pos, edge_color=weights, **kwargs)
+    nx.draw_networkx(nx_graph, ax=axis, pos=pos, edge_color=weights, **kwargs)

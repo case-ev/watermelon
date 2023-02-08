@@ -33,7 +33,7 @@ def main():
 
     LOGGER.info("Drawing graph")
     fig, ax = plt.subplots()
-    draw_graph(graph, ax=ax)
+    draw_graph(graph, axis=ax)
 
     fig.suptitle("Hello World!")
     ax.set_xlabel("X axis")
