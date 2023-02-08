@@ -1,4 +1,4 @@
-from watermelon.model.vertex_types import EMPTY_VERTEX_TYPE
+from watermelon.model.vertex_types import EmptyVertexType
 from watermelon_common.logger import LOGGER
 
 import networkx as nx
@@ -13,7 +13,7 @@ class Vertex:
     then it is assumed to be an empty vertex.
     """
 
-    def __init__(self, identifier, vertex_type=EMPTY_VERTEX_TYPE):
+    def __init__(self, identifier, vertex_type=EmptyVertexType()):
         self._id = identifier
         self._id_hash = hash(identifier)
         self.type = vertex_type

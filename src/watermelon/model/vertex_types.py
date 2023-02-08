@@ -9,23 +9,22 @@ class VertexType(abc.ABC):
     def _char():
         pass
 
+    def __repr__(self):
+        return self.__class__.__name__
+
+    def __eq__(self, __o):
+        return self.__class__ is __o.__class__
+
     @classmethod
     def __str__(cls):
         return cls._char()
 
 
-class __EmptyVertexType(VertexType):
+class EmptyVertexType(VertexType):
     """Empty node."""
 
     ACTIONS = [NULL_ACTION]
 
     @staticmethod
-    def __repr__():
-        return "EMPTY_VERTEX_TYPE"
-
-    @staticmethod
     def _char():
         return "\u03b8"  # theta
-
-
-EMPTY_VERTEX_TYPE = __EmptyVertexType()
