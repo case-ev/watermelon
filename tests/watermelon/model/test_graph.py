@@ -105,10 +105,22 @@ class TestEdge:
             e2 = wm.Edge(v1, v2, 10)
             e3 = wm.Edge(v1, v2, time=10)
             e4 = wm.Edge(v1, v2, 5, 6)
-            assert repr(e1) == f"Edge(origin=Vertex(id={i}, type=EmptyVertexType), target=Vertex(id={i + 1}, type=EmptyVertexType), weight=None, time=None)"
-            assert repr(e2) == f"Edge(origin=Vertex(id={i}, type=EmptyVertexType), target=Vertex(id={i + 1}, type=EmptyVertexType), weight=10, time=None)"
-            assert repr(e3) == f"Edge(origin=Vertex(id={i}, type=EmptyVertexType), target=Vertex(id={i + 1}, type=EmptyVertexType), weight=None, time=10)"
-            assert repr(e4) == f"Edge(origin=Vertex(id={i}, type=EmptyVertexType), target=Vertex(id={i + 1}, type=EmptyVertexType), weight=5, time=6)"
+            assert (
+                repr(e1)
+                == f"Edge(origin=Vertex(id={i}, type=EmptyVertexType), target=Vertex(id={i + 1}, type=EmptyVertexType), weight=None, time=None)"
+            )
+            assert (
+                repr(e2)
+                == f"Edge(origin=Vertex(id={i}, type=EmptyVertexType), target=Vertex(id={i + 1}, type=EmptyVertexType), weight=10, time=None)"
+            )
+            assert (
+                repr(e3)
+                == f"Edge(origin=Vertex(id={i}, type=EmptyVertexType), target=Vertex(id={i + 1}, type=EmptyVertexType), weight=None, time=10)"
+            )
+            assert (
+                repr(e4)
+                == f"Edge(origin=Vertex(id={i}, type=EmptyVertexType), target=Vertex(id={i + 1}, type=EmptyVertexType), weight=5, time=6)"
+            )
 
     def test_str(self):
         for i in range(10):
