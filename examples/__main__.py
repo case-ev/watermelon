@@ -74,7 +74,8 @@ for arg in map(lambda x: x.split("="), cmd_args.args[1:]):
 
 # Run the example
 print(
-    f"\nExecuting example '{AsciiColors.GREEN}{name}{AsciiColors.RESET}' with args {ex_args} and kwargs {ex_kwargs}\n"
+    f"\nExecuting example '{AsciiColors.GREEN}{name}{AsciiColors.RESET}' \
+with args {ex_args} and kwargs {ex_kwargs}\n"
 )
 LOGGER.info("Importing example %s", name)
 mod = importlib.import_module(f"examples.{name}")
