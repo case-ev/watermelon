@@ -35,7 +35,7 @@ class Vertex:
         )
 
     def __repr__(self):
-        return f"Vertex(id={repr(self.id)}, type={repr(self.type)})"
+        return f"Vertex(identifier={repr(self.id)}, vertex_type={repr(self.type)})"
 
     def __str__(self):
         return f"{str(self.type)}({str(self.id)})"
