@@ -132,7 +132,12 @@ class Graph:
 
     def get_edge(self, vert1, vert2):
         """Get the edge that connects two vertices"""
-        return self._adj_mat[vert1][vert2]
+        try:
+            return self._adj_mat[vert1][vert2]
+        except KeyError:
+            # We assume that if a KeyError is raised it is because you
+            # were trying to access it with the ids of the vertices.
+            return self._adj_mat[self[vert1]][self[vert2]]
 
     def adjacent(self, vert1, vert2):
         """Indicate whether two vertices are adjacent"""
