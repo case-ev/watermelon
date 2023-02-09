@@ -16,6 +16,7 @@ os.environ["PYTHONPATH"] = str(src_path)
 sys.path.append(str(src_path))
 
 from watermelon_common.logger import setup_logger, LOGGER
+from watermelon_utils.console import AsciiColors
 
 
 # Set up argument parsing
@@ -73,7 +74,7 @@ for arg in map(lambda x: x.split("="), cmd_args.args[1:]):
 
 # Run the example
 print(
-    f"\nExecuting example '\x1b[32;20m{name}\x1b[0m' with args {ex_args} and kwargs {ex_kwargs}\n"
+    f"\nExecuting example '{AsciiColors.GREEN}{name}{AsciiColors.RESET}' with args {ex_args} and kwargs {ex_kwargs}\n"
 )
 LOGGER.info("Importing example %s", name)
 mod = importlib.import_module(f"examples.{name}")

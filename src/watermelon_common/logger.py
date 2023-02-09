@@ -9,7 +9,7 @@ import logging
 import os
 from datetime import datetime
 
-from watermelon_utils.stdout import AsciiColors
+from watermelon_utils.console import AsciiColors
 
 
 LOGGER = logging.Logger("watermelon")
