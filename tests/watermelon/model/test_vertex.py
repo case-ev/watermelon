@@ -8,16 +8,19 @@ def test_equality():
     v1 = wm.Vertex(1, wm.EmptyVertexType())
     v2 = wm.Vertex(1, wm.EmptyVertexType())
     assert v1 == v2
+    assert v1 is v2
 
     v1 = wm.Vertex(2, wm.EmptyVertexType())
     v2 = wm.Vertex(2, wm.EmptyVertexType())
     assert v1 == v2
+    assert v1 is v2
 
     # While they are of different types, they have the same
     # hash so they should be the same
     v1 = wm.Vertex(int(1), wm.EmptyVertexType())
     v2 = wm.Vertex(float(1), wm.EmptyVertexType())
     assert v1 == v2
+    assert v1 is v2
 
     v1 = wm.Vertex(1, wm.EmptyVertexType())
     v2 = wm.Vertex(2, wm.EmptyVertexType())
@@ -34,6 +37,7 @@ def test_equality():
     v1 = wm.Vertex("1", wm.EmptyVertexType())
     v2 = wm.Vertex("1", wm.EmptyVertexType())
     assert v1 == v2
+    assert v1 is v2
 
 
 def test_repr():
