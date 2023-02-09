@@ -5,7 +5,10 @@ Module that contains all classes that model the environment and the
 problem that watermelon tries to solve.
 """
 
-from .agent import *
-from .graph import *
 from .actions import *
+from .agent import Agent
+from .edge import Edge
+from .graph import Graph, draw_graph
+from .state import AgentState
 from .types import *
+from .vertex import Vertex
