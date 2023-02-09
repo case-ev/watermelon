@@ -7,10 +7,6 @@ import importlib
 src_path = pathlib.Path.joinpath(pathlib.Path(__file__).parent.parent, "src")
 os.environ["PYTHONPATH"] = str(src_path)
 sys.path.append(str(src_path))
-try:
-    os.mkdir(os.path.join(src_path.parent, "logs"))
-except Exception:
-    pass
 
 from watermelon_common.logger import setup_logger, LOGGER
 import argparse
@@ -51,7 +47,11 @@ PARSER.add_argument(
 )
 
 cmd_args = PARSER.parse_args()
-setup_logger(cmd_args.quiet, cmd_args.debug, cmd_args.verbose, cmd_args.log)
+try:
+    setup_logger(cmd_args.quiet, cmd_args.debug, cmd_args.verbose, cmd_args.log)
+except FileNotFoundError:
+    os.mkdir(cmd_args.log)
+    setup_logger(cmd_args.quiet, cmd_args.debug, cmd_args.verbose, cmd_args.log)
 
 # Get the attributes
 name = cmd_args.args[0]
