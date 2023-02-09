@@ -64,8 +64,11 @@ def setup_logger(quiet=False, debug=False, verbose=False, log_dir=False):
         default False
     log_dir : bool, optional
         Directory to save all logs, by default False. If it it False,
-        the program doesn't store the logs; if it is some value, it
-        assumes
+        the program doesn't store the logs; if it is a string
+        corresponding to a directory, it generates a file within it
+        with the current time and date as name, and if it corresponds
+        to a file then it outputs to the given file, overwriting if
+        necessary
     """
 
     if not quiet:
