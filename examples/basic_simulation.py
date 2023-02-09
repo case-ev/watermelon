@@ -12,7 +12,7 @@ def main(delta=1e-3):
 
     LOGGER.info("Creating agents")
     agents = [
-        wm.Agent(i, graph, [wm.Decision(wm.Vertex(0), wm.NULL_ACTION)])
+        wm.Agent(i, graph, [wm.Decision(wm.Vertex(0), wm.NullAction())])
         for i in range(2)
     ]
 
