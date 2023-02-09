@@ -9,6 +9,7 @@ from watermelon.model.state import AgentState
 
 class Agent:
     """Agent in a graph."""
+
     def __init__(self, identifier, graph, actions=None, initial_state=AgentState()):
         self._id = identifier
         self._id_hash = hash(identifier)

@@ -4,7 +4,6 @@ watermelon_utils.stdout
 Utilities for printing to console.
 """
 
-
 import dataclasses
 
 
