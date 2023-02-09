@@ -6,7 +6,8 @@ Functionality for the state of the agent
 
 import dataclasses
 
-from watermelon.model import Vertex, VertexAction
+from watermelon.model.graph import Vertex
+from watermelon.model.vertex_actions import VertexAction
 
 
 @dataclasses.dataclass
