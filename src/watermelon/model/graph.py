@@ -90,7 +90,7 @@ class Graph:
 
         Parameters
         ----------
-        e : watermelon.model.Edge
+        edge : watermelon.model.Edge
             Edge connecting two vertices
 
         Returns
