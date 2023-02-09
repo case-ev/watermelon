@@ -7,7 +7,20 @@ Definition of a vertex in the graph.
 from watermelon.model.types import EmptyVertexType
 
 
-class Vertex:
+class VertexMetaClass(type):
+    """Metaclass to allow Vertex singletons, defined by their identifier"""
+
+    _instances = {}
+
+    def __call__(cls, identifier, *args, **kwargs):
+        id_hash = hash(identifier)
+        if id_hash not in cls._instances:
+            instance = super().__call__(identifier, *args, **kwargs)
+            cls._instances[id_hash] = instance
+        return cls._instances[id_hash]
+
+
+class Vertex(metaclass=VertexMetaClass):
     """Vertex of a graph, which has a certain type and identifier
 
     The identifier must be a hashable type, and if the type is omitted
