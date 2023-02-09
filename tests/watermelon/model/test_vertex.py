@@ -41,8 +41,8 @@ def test_repr():
     for i in range(10):
         v1 = wm.Vertex(i, wm.EmptyVertexType())
         v2 = wm.Vertex(str(i), wm.EmptyVertexType())
-        assert repr(v1) == f"Vertex(id={i}, type=EmptyVertexType)"
-        assert repr(v2) == f"Vertex(id='{i}', type=EmptyVertexType)"
+        assert repr(v1) == f"Vertex(identifier={i}, vertex_type=EmptyVertexType)"
+        assert repr(v2) == f"Vertex(identifier='{i}', vertex_type=EmptyVertexType)"
 
 
 def test_str():
