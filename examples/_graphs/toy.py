@@ -1,7 +1,16 @@
+"""
+examples._graphs.toy
+--------------------
+Toy graphs which are created with arbitrary parameters to show some
+functionality of watermelon.
+"""
+
 import watermelon as wm
 
 
 def ex_graph1():
+    """Create graph1"""
+
     graph = wm.Graph()
 
     verts = [wm.Vertex(i) for i in range(5)]
