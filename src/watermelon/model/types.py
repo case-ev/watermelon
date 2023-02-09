@@ -6,7 +6,7 @@ Types of vertices
 
 import abc
 
-import watermelon.model.vertex_actions as actions
+import watermelon.model.actions as actions
 
 
 class VertexType(abc.ABC):

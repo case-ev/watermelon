@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 
 from watermelon_common.logger import LOGGER
-from watermelon.model.vertex_types import EmptyVertexType
+from watermelon.model.types import EmptyVertexType
 
 
 class Vertex:

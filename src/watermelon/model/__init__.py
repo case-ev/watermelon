@@ -7,5 +7,5 @@ problem that watermelon tries to solve.
 
 from .agent import *
 from .graph import *
-from .vertex_actions import *
-from .vertex_types import *
+from .actions import *
+from .types import *
