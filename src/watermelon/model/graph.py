@@ -27,8 +27,16 @@ class Graph:
             self._adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e)
         )
 
-    # def __getitem__(self, vertex_id):
-    #     if isinstance(vertex_id, tuple):
+    def __getitem__(self, key):
+        try:
+            # See if an iterable of id's is given
+            vertices = []
+            for vertex_id in key:
+                vertices.append(self._verts_id[hash(vertex_id)])
+            return vertices
+        except TypeError:
+            # This would happen if it is not an iterable
+            return self._verts_id[hash(key)]
 
     @property
     def vertices(self):
