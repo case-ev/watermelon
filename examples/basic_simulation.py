@@ -1,9 +1,17 @@
-import watermelon as wm
+"""
+examples.basic_simulation
+-------------------------
+Example to show how a basic simulation can be created.
+"""
+
 from watermelon_common.logger import LOGGER
 from examples._graphs.toy import ex_graph1
+import watermelon as wm
 
 
 def main(delta=1e-3):
+    """Entry point for the example"""
+
     LOGGER.info("Parsing example arguments")
     delta = float(delta)
 

@@ -1,11 +1,18 @@
-from watermelon.model import Edge, Graph, Vertex, draw_graph
-from watermelon_common.logger import LOGGER
+"""
+examples.hello_world
+-------------------------
+Example to show the creation of a basic graph.
+"""
 
-import networkx as nx
 import matplotlib.pyplot as plt
+
+from watermelon_common.logger import LOGGER
+from watermelon.model import Edge, Graph, Vertex, draw_graph
 
 
 def main():
+    """Entry point for the example"""
+
     LOGGER.info("Creating vertices")
     verts = [Vertex(i) for i in range(5)]
 
