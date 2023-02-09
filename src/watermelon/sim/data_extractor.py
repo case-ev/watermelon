@@ -5,10 +5,24 @@ Code that defines the class that extracts data from the simulation
 and transforms it into the correct format.
 """
 
+import abc
+
 import pandas as pd
 
 
-class DataFrameExtractor:
+class SimulationDataExtractor(abc.ABC):
+    """Abstract class for an object that extracts data from a simulation"""
+
+    @abc.abstractmethod
+    def initialize(self, data):
+        """Initialize the extractor"""
+
+    @abc.abstractmethod
+    def append(self, simulation_state):
+        """Add new data"""
+
+
+class DataFrameExtractor(SimulationDataExtractor):
     """Object that extracts data into a pandas.DataFrame object.
 
     In the dataframe that is created, there are columns which indicate
@@ -17,7 +31,11 @@ class DataFrameExtractor:
     """
 
     def __init__(self, agents, initial_state):
-        self.data = pd.DataFrame(self.parse_data(agents, initial_state, 0))
+        self.data = None
+        self.initialize(self.parse_data(agents, initial_state, 0))
+
+    def initialize(self, data):
+        self.data = pd.DataFrame(data)
 
     def append(self, simulation_state):
         """Get the data from the simulator and append it"""
