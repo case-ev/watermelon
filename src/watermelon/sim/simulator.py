@@ -30,7 +30,14 @@ class Simulator:
         """Update the simulation. Should be run at every timestep"""
         self.time += self.delta
 
-        # State update code ...
+        # State update code
+        for agent in self.agents:
+            decision = agent.actions[agent.current_action]
+
+            # Go to the next action if appropiate
+            if agent.finished_action:
+                agent.current_action += 1
+                agent.finished_action = False
 
         try:
             self.data_extractor.append(self)
