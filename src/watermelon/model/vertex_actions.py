@@ -39,8 +39,24 @@ class VertexAction:
 
 
 class NullAction(VertexAction):
-    """Action that represents not doing anything"""
+    """Action for not doing anything"""
 
     @staticmethod
     def _char():
         return "\u03d5"  # phi
+
+
+class ChargeBatteryAction(VertexAction):
+    """Action for charging the battery"""
+
+    @staticmethod
+    def _char():
+        return "C"
+
+
+class WaitAction(VertexAction):
+    """Action for waiting"""
+
+    @staticmethod
+    def _char():
+        return "W"
