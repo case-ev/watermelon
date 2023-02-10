@@ -38,6 +38,10 @@ def main():
     print("\nGraph with edges")
     print(graph)
 
+    print("\nNeighbors of each vertex")
+    for i in graph.id:
+        print(f"{graph[i]} -> [{', '.join(map(str, graph.neighbors(i)))}]")
+
     LOGGER.info("Drawing graph")
     fig, ax = plt.subplots()
     wm.draw_graph(graph, axis=ax)
