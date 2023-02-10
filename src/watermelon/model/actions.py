@@ -31,7 +31,27 @@ class VertexAction:
     @staticmethod
     @abc.abstractmethod
     def _char():
-        pass
+        """Unique character that represents an action"""
+
+    @abc.abstractmethod
+    def act(self, agent, vertex):
+        """Make an agent take this action on a vertex.
+
+        This method returns both the time it takes to do the action and
+        the amount of energy required to do it.
+
+        Parameters
+        ----------
+        agent : watermelon.model.Agent
+            Agent that takes the action
+        vertex : watermelon.model.Vertex
+            Vertex to add to the graph
+
+        Returns
+        -------
+        time, energy : (float, float)
+            Amount of time and energy that it takes to do the action
+        """
 
     @classmethod
     def __repr__(cls):
@@ -49,6 +69,9 @@ class NullAction(VertexAction):
     def _char():
         return "\u03d5"  # phi
 
+    def act(self, agent, vertex):
+        return 0, 0
+
 
 class ChargeBatteryAction(VertexAction):
     """Action for charging the battery"""
@@ -57,6 +80,9 @@ class ChargeBatteryAction(VertexAction):
     def _char():
         return "C"
 
+    def act(self, agent, vertex):
+        return 0, 0
+
 
 class WaitAction(VertexAction):
     """Action for waiting"""
@@ -64,3 +90,6 @@ class WaitAction(VertexAction):
     @staticmethod
     def _char():
         return "W"
+
+    def act(self, agent, vertex):
+        return 0, 0
