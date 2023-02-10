@@ -78,7 +78,7 @@ class ChargeBatteryAction(VertexAction):
 
     @staticmethod
     def _char():
-        return "C"
+        return "c"
 
     def act(self, agent, vertex):
         return 0, 0
@@ -89,7 +89,18 @@ class WaitAction(VertexAction):
 
     @staticmethod
     def _char():
-        return "W"
+        return "w"
+
+    def act(self, agent, vertex):
+        return 0, 0
+
+
+class LoadMaterialAction(VertexAction):
+    """Action for loading material"""
+
+    @staticmethod
+    def _char():
+        return "x"
 
     def act(self, agent, vertex):
         return 0, 0

@@ -63,3 +63,31 @@ class EVChargerType(VertexType):
     @property
     def capacity(self):
         return self._capacity
+
+    @property
+    def charge_power(self):
+        """Power with which the EV charges"""
+        return self._charge_power
+
+
+class MaterialLoadType(VertexType):
+    """Load material"""
+
+    ACTIONS = [actions.LoadMaterialAction(), actions.NullAction(), actions.WaitAction()]
+
+    def __init__(self, capacity, load_rate):
+        self._capacity = capacity
+        self._load_rate = load_rate
+
+    @staticmethod
+    def _char():
+        return "X"
+
+    @property
+    def capacity(self):
+        return self._capacity
+
+    @property
+    def load_rate(self):
+        """Rate at which material is loaded"""
+        return self._load_rate
