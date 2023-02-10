@@ -31,6 +31,7 @@ class Vertex(metaclass=VertexMetaClass):
         self._id = identifier
         self._id_hash = hash(identifier)
         self.type = vertex_type
+        self.members = []
 
     def __hash__(self):
         return self.hash
