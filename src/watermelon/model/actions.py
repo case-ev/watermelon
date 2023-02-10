@@ -20,6 +20,10 @@ class Decision:
     def __str__(self):
         return f"({str(self.vertex)}, {str(self.action)})"
 
+    def tuple(self):
+        """Parse into a tuple"""
+        return self.vertex, self.action
+
 
 class VertexAction:
     """Type of action"""
