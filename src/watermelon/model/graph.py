@@ -126,25 +126,30 @@ class Graph:
             self.add_edge(edge)
         return self
 
+    def _parse_vertex(self, vertex):
+        if vertex in self._verts_id:
+            return self[vertex]
+        return vertex
+
     def get_vertex(self, vert_id):
         """Get the vertex associated with a given ID"""
-        return self._verts_id[hash(vert_id)]
+        return self._parse_vertex(vert_id)
 
     def get_edge(self, vert1, vert2):
         """Get the edge that connects two vertices"""
-        try:
-            return self._adj_mat[vert1][vert2]
-        except KeyError:
-            # We assume that if a KeyError is raised it is because you
-            # were trying to access it with the ids of the vertices.
-            return self._adj_mat[self[vert1]][self[vert2]]
+        vert1 = self._parse_vertex(vert1)
+        vert2 = self._parse_vertex(vert2)
+        return self._adj_mat[vert1][vert2]
 
     def adjacent(self, vert1, vert2):
         """Indicate whether two vertices are adjacent"""
+        vert1 = self._parse_vertex(vert1)
+        vert2 = self._parse_vertex(vert2)
         return not pd.isnull(self.get_edge(vert1, vert2))
 
     def neighbors(self, vertex):
         """Get the neighbors of a vertex"""
+        vertex = self._parse_vertex(vertex)
         return (
             self._adj_mat[vertex][self._adj_mat[vertex].isna().map(lambda x: not x)]
             .keys()
