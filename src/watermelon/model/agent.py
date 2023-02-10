@@ -7,7 +7,7 @@ Modelling of the agent and its decisions.
 from watermelon.model.state import AgentState
 
 
-DEFAULT_BATTERY_CAPACITY = 1000
+DEFAULT_BATTERY_CAPACITY = 100000           # W * h
 
 
 class AgentMetaClass(type):
