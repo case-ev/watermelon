@@ -42,27 +42,18 @@ class EmptyVertexType(VertexType):
     def _char():
         return "\u03b8"  # theta
 
-    @property
-    def capacity(self):
-        return float("inf")
-
 
 class EVChargerType(VertexType):
     """Charger for electric vehicles"""
 
     ACTIONS = [actions.ChargeBatteryAction(), actions.NullAction(), actions.WaitAction()]
 
-    def __init__(self, capacity, charge_power):
-        self._capacity = capacity
+    def __init__(self, charge_power):
         self._charge_power = charge_power
 
     @staticmethod
     def _char():
         return "C"
-
-    @property
-    def capacity(self):
-        return self._capacity
 
     @property
     def charge_power(self):
@@ -75,17 +66,12 @@ class MaterialLoadType(VertexType):
 
     ACTIONS = [actions.LoadMaterialAction(), actions.NullAction(), actions.WaitAction()]
 
-    def __init__(self, capacity, load_rate):
-        self._capacity = capacity
+    def __init__(self, load_rate):
         self._load_rate = load_rate
 
     @staticmethod
     def _char():
         return "X"
-
-    @property
-    def capacity(self):
-        return self._capacity
 
     @property
     def load_rate(self):
@@ -98,17 +84,12 @@ class MaterialDischargeType(VertexType):
 
     ACTIONS = [actions.DischargeMaterialAction(), actions.NullAction(), actions.WaitAction()]
 
-    def __init__(self, capacity, discharge_rate):
-        self._capacity = capacity
+    def __init__(self, discharge_rate):
         self._discharge_rate = discharge_rate
 
     @staticmethod
     def _char():
         return "O"
-
-    @property
-    def capacity(self):
-        return self._capacity
 
     @property
     def discharge_rate(self):
