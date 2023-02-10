@@ -27,7 +27,7 @@ class Vertex(metaclass=VertexMetaClass):
     then it is assumed to be an empty vertex
     """
 
-    def __init__(self, identifier, capacity=None, *, vertex_type=EmptyVertexType()):
+    def __init__(self, identifier, capacity=None, vertex_type=EmptyVertexType()):
         self._id = identifier
         self._id_hash = hash(identifier)
         self.type = vertex_type
