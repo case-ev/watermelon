@@ -39,6 +39,11 @@ class Graph:
             return self._verts_id[hash(key)]
 
     @property
+    def id(self):
+        """IDs of all vertices"""
+        return self._verts_id.keys()
+
+    @property
     def vertices(self):
         """Vertices within the graph"""
         return self._vertices.copy()
