@@ -39,11 +39,6 @@ class Agent:
         else:
             self.actions = actions
 
-        self.current_action = 0
-        self.finished_action = False
-        self.is_waiting = False
-        self.is_done = False
-
     def __hash__(self):
         return self.hash
 

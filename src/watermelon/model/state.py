@@ -4,6 +4,7 @@ watermelon.model.state
 Functionality for the state of the agent
 """
 
+from typing import Tuple
 import dataclasses
 
 from watermelon.model.vertex import Vertex
@@ -17,3 +18,10 @@ class AgentState:
     vertex: Vertex = None
     action: VertexAction = None
     soc: float = None
+    current_action: int = 0
+    action_time: float = 0
+    finished_action: bool = False
+    is_waiting: bool = False
+    is_done: bool = False
+    is_travelling: Tuple[bool, Vertex, Vertex] = (False, None, None)
+    just_arrived: bool = False
