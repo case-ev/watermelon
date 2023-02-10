@@ -17,7 +17,7 @@ class AgentState:
 
     vertex: Vertex = None
     action: VertexAction = None
-    soc: float = None
+    soc: float = 1
     current_action: int = 0
     action_time: float = 0
     finished_action: bool = False
