@@ -30,9 +30,11 @@ class DataFrameExtractor(SimulationDataExtractor):
     indicates the state of each agent at every instant.
     """
 
-    def __init__(self, agents, initial_state):
+    def __init__(self, state):
         self.data = None
-        self.initialize(self.parse_data(agents, initial_state, 0))
+        self.initialize(
+            self.parse_data(state.agents, [a.actions[0] for a in state.agents], 0)
+        )
 
     def initialize(self, data):
         self.data = pd.DataFrame(data)

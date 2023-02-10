@@ -24,7 +24,7 @@ class Simulator:
 
     def start(self, extractor_cls=DataFrameExtractor):
         """Start the simulation. It must be ran before you start updating"""
-        self.data_extractor = extractor_cls(self.agents, self.state)
+        self.data_extractor = extractor_cls(self)
 
     def update(self):
         """Update the simulation. Should be run at every timestep"""
