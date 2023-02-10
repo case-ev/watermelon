@@ -132,9 +132,12 @@ class Graph:
         return self
 
     def _parse_vertex(self, vertex):
-        if vertex in self._verts_id:
-            return self[vertex]
-        return vertex
+        try:
+            if vertex in self._verts_id:
+                return self[vertex]
+            return vertex
+        except AttributeError:
+            return vertex
 
     def get_vertex(self, vert_id):
         """Get the vertex associated with a given ID"""
