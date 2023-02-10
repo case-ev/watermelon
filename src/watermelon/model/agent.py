@@ -10,7 +10,20 @@ from watermelon.model.state import AgentState
 DEFAULT_BATTERY_CAPACITY = 1000
 
 
-class Agent:
+class AgentMetaClass(type):
+    """Metaclass to allow Agent singletons, defined by their identifier"""
+
+    _instances = {}
+
+    def __call__(cls, identifier, *args, **kwargs):
+        id_hash = hash(identifier)
+        if id_hash not in cls._instances:
+            instance = super().__call__(identifier, *args, **kwargs)
+            cls._instances[id_hash] = instance
+        return cls._instances[id_hash]
+
+
+class Agent(metaclass=AgentMetaClass):
     """Agent in a graph."""
 
     def __init__(
