@@ -32,12 +32,32 @@ class Simulator:
 
         # State update code
         for agent in self.agents:
-            decision = agent.actions[agent.current_action]
+            agent.state.action_time += self.delta
+            decision = agent.actions[agent.state.current_action]
+            vertex, action = decision.tuple()
+
+            if agent.state.is_travelling[0]:
+                # It is travelling to a vertex
+                _, origin, target = agent.state.is_travelling
+                edge = self.graph.get_edge(origin, target)
+                travel_time = edge.time
+                if agent.state.action_time > travel_time:
+                    agent.state.is_travelling = (False, None, None)
+                    agent.state.just_arrived = True
+            else:
+                # It is doing some action
+                # if agent.state.just_arrived:
+                #     if vertex.capacity >=
+                time, energy = action.act(agent, vertex)
 
             # Go to the next action if appropiate
-            if agent.finished_action:
-                agent.current_action += 1
-                agent.finished_action = False
+            if agent.state.finished_action:
+                next_vertex, next_action = agent.actions[agent.state.current_action + 1].tuple()
+                if next_vertex is not vertex:
+                    agent.state.is_travelling = (True, vertex, next_vertex)
+                    agent.state.action_time = 0
+                agent.state.current_action += 1
+                agent.state.finished_action = False
 
         try:
             self.data_extractor.append(self)
