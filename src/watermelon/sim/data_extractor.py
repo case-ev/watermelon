@@ -21,7 +21,8 @@ class DataElement:
     state: AgentState
 
     def __str__(self):
-        result = f"{str(self.decision)}, {100 * self.state.soc:.1f}%, time={self.state.action_time:.2f} "
+        result = f"{str(self.decision)}, {100 * self.state.soc:.1f}%, \
+time={self.state.action_time:.2f} "
         if self.state.is_travelling[0]:
             result += "[T]"
         if self.state.is_done:
