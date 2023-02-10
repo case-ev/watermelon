@@ -25,10 +25,12 @@ class Simulator:
 
     def start(self, extractor_cls=DataFrameExtractor):
         """Start the simulation. It must be ran before you start updating"""
+        LOGGER.info("Starting simulation")
         self.data_extractor = extractor_cls(self)
 
     def update(self):
         """Update the simulation. Should be run at every timestep"""
+        LOGGER.debug("Starting iteration")
         self.time += self.delta
 
         # State update code
@@ -68,10 +70,10 @@ class Simulator:
                 if agent.state.finished_action:
                     # Send the agent to sleep if there are no more actions left
                     if agent.state.current_action + 1 >= len(agent.actions):
+                        LOGGER.info("Agent finished")
                         agent.state.is_done = True
                         agent.state.action_time = 0
                     else:
-                        print(agent.state.current_action, agent.actions)
                         next_vertex, _ = agent.actions[agent.state.current_action + 1].tuple()
                         if next_vertex is not vertex:
                             agent.state.is_travelling = (True, vertex, next_vertex)
@@ -80,6 +82,7 @@ class Simulator:
                         agent.state.finished_action = False
 
         # Store the data
+        LOGGER.debug("Storing iteration data")
         try:
             self.data_extractor.append(self)
         except Exception as e:
