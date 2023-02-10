@@ -21,7 +21,7 @@ class Simulator:
         self.time = 0.0
         self.state = np.array([a.actions[0] for a in agents])
         self.data_extractor = None
-        self.battery_eff = 0.75
+        self.battery_eff = battery_eff
 
     def start(self, extractor_cls=DataFrameExtractor):
         """Start the simulation. It must be ran before you start updating"""
