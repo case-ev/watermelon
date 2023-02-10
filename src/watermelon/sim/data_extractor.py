@@ -9,26 +9,24 @@ import abc
 import dataclasses
 import pandas as pd
 
+from watermelon.model.state import AgentState
 from watermelon.model.actions import Decision
 
 
 @dataclasses.dataclass
 class DataElement:
     """Element of simulation data of an agent"""
+
     decision: Decision
-    soc: float
-    action_time: float
-    is_travelling: bool
-    is_done: bool
-    is_waiting: bool
+    state: AgentState
 
     def __str__(self):
-        result = f"{str(self.decision)}, {100 * self.soc:.1f}%, time={self.action_time:.2f} "
-        if self.is_travelling:
+        result = f"{str(self.decision)}, {100 * self.state.soc:.1f}%, time={self.state.action_time:.2f} "
+        if self.state.is_travelling[0]:
             result += "[T]"
-        if self.is_done:
+        if self.state.is_done:
             result += "[D]"
-        if self.is_waiting:
+        if self.state.is_waiting:
             result += "[W]"
         return result
 
@@ -70,12 +68,8 @@ class DataFrameExtractor(SimulationDataExtractor):
         """Extract some input data according to the required format"""
         return {
             **{"time": [simulation.time]},
-            **{a: DataElement(
-                a.actions[a.state.current_action],
-                a.state.soc,
-                a.state.action_time,
-                a.state.is_travelling[0],
-                a.state.is_done,
-                a.state.is_waiting,
-            ) for a in simulation.agents}
+            **{
+                a: DataElement(a.actions[a.state.current_action], a.state)
+                for a in simulation.agents
+            },
         }
