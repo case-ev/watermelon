@@ -19,6 +19,8 @@ def main(delta=1, stop_time=180):
 
     LOGGER.info("Creating environment")
     graph = ex_graph2()
+    print("Using the following graph")
+    print(graph)
 
     LOGGER.info("Creating agents")
     agents = [
