@@ -58,7 +58,7 @@ class EVChargerType(VertexType):
 
     @staticmethod
     def _char():
-        return "EV"
+        return "C"
 
     @property
     def capacity(self):
@@ -91,3 +91,26 @@ class MaterialLoadType(VertexType):
     def load_rate(self):
         """Rate at which material is loaded"""
         return self._load_rate
+
+
+class MaterialDischargeType(VertexType):
+    """Discharge material"""
+
+    ACTIONS = [actions.DischargeMaterialAction(), actions.NullAction(), actions.WaitAction()]
+
+    def __init__(self, capacity, discharge_rate):
+        self._capacity = capacity
+        self._discharge_rate = discharge_rate
+
+    @staticmethod
+    def _char():
+        return "O"
+
+    @property
+    def capacity(self):
+        return self._capacity
+
+    @property
+    def discharge_rate(self):
+        """Rate at which material is discharged"""
+        return self._discharge_rate

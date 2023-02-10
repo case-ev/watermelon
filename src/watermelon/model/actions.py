@@ -104,3 +104,14 @@ class LoadMaterialAction(VertexAction):
 
     def act(self, agent, vertex):
         return 0, 0
+
+
+class DischargeMaterialAction(VertexAction):
+    """Action for discharging material"""
+
+    @staticmethod
+    def _char():
+        return "o"
+
+    def act(self, agent, vertex):
+        return 0, 0
