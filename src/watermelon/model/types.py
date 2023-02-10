@@ -17,11 +17,6 @@ class VertexType(abc.ABC):
     def _char():
         pass
 
-    @property
-    @abc.abstractmethod
-    def capacity(self):
-        """Maximum capacity of the vertex"""
-
     def __repr__(self):
         return self.__class__.__name__
 
