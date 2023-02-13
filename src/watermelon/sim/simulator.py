@@ -22,71 +22,107 @@ class Simulator:
         self.state = np.array([a.actions[0] for a in agents])
         self.data_extractor = None
         self.battery_eff = battery_eff
+        self._iteration_num = 0
+        self.should_close = False
+        self.stop_time = 0
 
-    def start(self, extractor_cls=DataFrameExtractor):
+    def start(self, stop_time, *, extractor_cls=DataFrameExtractor):
         """Start the simulation. It must be ran before you start updating"""
         LOGGER.info("Starting simulation")
         self.data_extractor = extractor_cls(self)
+        self._iteration_num = 0
+        self.stop_time = stop_time
+        self.should_close = False
 
     def update(self):
         """Update the simulation. Should be run at every timestep"""
-        LOGGER.debug("Starting iteration")
+        LOGGER.debug("Iteration %i", self._iteration_num)
         self.time += self.delta
+        self.should_close = self.time > self.stop_time
+        self._iteration_num += 1
 
         # State update code
         for agent in self.agents:
             agent.state.action_time += self.delta
 
             if not agent.state.is_done:
-                decision = agent.actions[agent.state.current_action]
-                vertex, action = decision.tuple()
-
-                if agent.state.is_travelling[0]:
-                    # It is travelling to a vertex
-                    _, origin, target = agent.state.is_travelling
-                    edge = self.graph.get_edge(origin, target)
-                    travel_time = edge.time
-                    if agent.state.action_time > travel_time:
-                        agent.state.is_travelling = (False, None, None)
-                        agent.state.just_arrived = True
-                        agent.state.action_time = 0
-                        agent.state.soc -= edge.weight / (self.battery_eff * agent.battery_capacity)
-                else:
-                    # It is doing some action
-                    if agent.state.just_arrived:
-                        vertex.members.append(agent)
-                        agent.state.is_waiting = True
-                        agent.state.just_arrived = False
-
-                    if agent.state.is_waiting:
-                        agent.state.is_waiting = vertex.capacity < len(vertex.members)
-                    else:
-                        time, energy = action.act(agent, vertex)
-                        if agent.state.action_time > time:
-                            agent.state.finished_action = True
-                            agent.state.soc -= energy / (self.battery_eff * agent.battery_capacity)
-
-                # Go to the next action if appropiate
-                if agent.state.finished_action:
-                    # Send the agent to sleep if there are no more actions left
-                    if agent.state.current_action + 1 >= len(agent.actions):
-                        LOGGER.info("Agent finished")
-                        agent.state.is_done = True
-                        agent.state.action_time = 0
-                    else:
-                        next_vertex, _ = agent.actions[agent.state.current_action + 1].tuple()
-                        if next_vertex is not vertex:
-                            agent.state.is_travelling = (True, vertex, next_vertex)
-                            agent.state.action_time = 0
-                        agent.state.current_action += 1
-                        agent.state.finished_action = False
+                self._update_agent(agent)
 
         # Store the data
-        LOGGER.debug("Storing iteration data")
         try:
             self.data_extractor.append(self)
-        except Exception as e:
+        except AttributeError:
             LOGGER.error(
                 "Failed to append data to the extractor. Did you forget to start the simulation?"
             )
-            raise e
+            self.should_close = True
+
+    def _update_agent(self, agent):
+        decision = agent.actions[agent.state.current_action]
+        vertex, action = decision.tuple()
+        self._do_action(agent, vertex, action)
+        self._check_next_action(agent, vertex)
+
+    def _do_action(self, agent, vertex, action):
+        if agent.state.is_travelling[0]:
+            # It is travelling to a vertex
+            _, origin, target = agent.state.is_travelling
+            edge = self.graph.get_edge(origin, target)
+            travel_time = edge.time
+            completion = agent.state.action_time / travel_time if travel_time != 0 else 1
+            LOGGER.debug(
+                "(%s|%i) %s->%s [%d%%]",
+                agent,
+                agent.state.current_action,
+                origin,
+                target,
+                100 * completion,
+            )
+            if agent.state.action_time > travel_time:
+                agent.state.is_travelling = (False, None, None)
+                agent.state.just_arrived = True
+                agent.state.action_time = 0
+                agent.state.soc -= edge.weight / (
+                    self.battery_eff * agent.battery_capacity
+                )
+        else:
+            # It is doing some action
+            if agent.state.just_arrived:
+                vertex.members.append(agent)
+                agent.state.is_waiting = True
+                agent.state.just_arrived = False
+
+            if agent.state.is_waiting:
+                LOGGER.debug("(%s|%i) waiting in %s", agent, agent.state.current_action, vertex)
+                agent.state.is_waiting = vertex.capacity < len(vertex.members)
+            else:
+                time, energy = action.act(agent, vertex)
+                completion = agent.state.action_time / time if time != 0 else 1
+                LOGGER.debug(
+                    "(%s|%i) %s in %s [%d%%]",
+                    agent,
+                    agent.state.current_action,
+                    action,
+                    vertex,
+                    100 * completion,
+                )
+                if agent.state.action_time > time:
+                    agent.state.finished_action = True
+                    agent.state.soc -= energy / (
+                        self.battery_eff * agent.battery_capacity
+                    )
+
+    def _check_next_action(self, agent, vertex):
+        if agent.state.finished_action:
+            # Send the agent to sleep if there are no more actions left
+            if agent.state.current_action + 1 >= len(agent.actions):
+                LOGGER.info("Agent finished")
+                agent.state.is_done = True
+                agent.state.action_time = 0
+            else:
+                next_vertex, _ = agent.actions[agent.state.current_action + 1].tuple()
+                if next_vertex is not vertex:
+                    agent.state.is_travelling = (True, vertex, next_vertex)
+                    agent.state.action_time = 0
+                agent.state.current_action += 1
+                agent.state.finished_action = False

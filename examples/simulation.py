@@ -179,10 +179,10 @@ def main(delta=1, stop_time=180):
 
     LOGGER.info("Initializing simulation")
     sim = wm.sim.Simulator(graph, agents, delta=delta)
-    sim.start()
+    sim.start(stop_time)
 
     LOGGER.info("Going into main loop")
-    while sim.time <= stop_time:
+    while not sim.should_close:
         sim.update()
 
     LOGGER.info("Finished simulation, showing results")
