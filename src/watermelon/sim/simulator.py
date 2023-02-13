@@ -47,7 +47,7 @@ class Simulator:
             agent.state.action_time += self.delta
             finished_simulation &= agent.state.is_done
 
-            if not agent.state.is_done:
+            if not (agent.state.is_done or agent.state.out_of_charge):
                 self._update_agent(agent)
         self.should_close |= finished_simulation
 
@@ -75,7 +75,9 @@ class Simulator:
             _, origin, target = agent.state.is_travelling
             edge = self.graph.get_edge(origin, target)
             travel_time = edge.time
-            completion = agent.state.action_time / travel_time if travel_time != 0 else 1
+            completion = (
+                agent.state.action_time / travel_time if travel_time != 0 else 1
+            )
             LOGGER.debug(
                 "(%s|%i) %s->%s [%d%%]",
                 agent,
@@ -88,8 +90,8 @@ class Simulator:
                 agent.state.is_travelling = (False, None, None)
                 agent.state.just_arrived = True
                 agent.state.action_time = 0
-                agent.state.soc -= edge.weight / (
-                    self.battery_eff * agent.battery_capacity
+                self._update_soc(
+                    agent, -edge.weight / (self.battery_eff * agent.battery_capacity)
                 )
         else:
             # It is doing some action
@@ -99,7 +101,9 @@ class Simulator:
                 agent.state.just_arrived = False
 
             if agent.state.is_waiting:
-                LOGGER.debug("(%s|%i) waiting in %s", agent, agent.state.current_action, vertex)
+                LOGGER.debug(
+                    "(%s|%i) waiting in %s", agent, agent.state.current_action, vertex
+                )
                 agent.state.is_waiting = vertex.capacity < len(vertex.members)
             else:
                 time, energy = action.act(agent, vertex)
@@ -115,8 +119,8 @@ class Simulator:
                 if agent.state.action_time > time:
                     vertex.members.discard(agent)
                     agent.state.finished_action = True
-                    agent.state.soc -= energy / (
-                        self.battery_eff * agent.battery_capacity
+                    self._update_soc(
+                        agent, -energy / (self.battery_eff * agent.battery_capacity)
                     )
 
     def _check_next_action(self, agent, vertex):
@@ -133,3 +137,14 @@ class Simulator:
                     agent.state.action_time = 0
                 agent.state.current_action += 1
                 agent.state.finished_action = False
+
+    def _update_soc(self, agent, soc_delta):
+        agent.state.soc += soc_delta
+        if agent.state.soc <= 0:
+            agent.state.soc = 0
+            agent.state.out_of_charge = True
+        elif agent.state.soc > 1:
+            agent.state.overcharged = True
+        else:
+            agent.state.out_of_charge = False
+            agent.state.overcharged = False

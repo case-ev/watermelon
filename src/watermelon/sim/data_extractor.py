@@ -26,9 +26,13 @@ time={self.state.action_time:.2f} "
         if self.state.is_travelling[0]:
             result += "[T]"
         if self.state.is_done:
-            result += "[D]"
+            result += "[F]"
         if self.state.is_waiting:
             result += "[W]"
+        if self.state.out_of_charge:
+            result += "[D]"
+        if self.state.overcharged:
+            result += "[O]"
         return result
 
 

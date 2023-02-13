@@ -25,6 +25,8 @@ class AgentState:
     is_done: bool = False
     is_travelling: Tuple[bool, Vertex, Vertex] = (False, None, None)
     just_arrived: bool = False
+    out_of_charge: bool = False
+    overcharged: bool = False
 
     def copy(self):
         """Create a copy of itself"""
