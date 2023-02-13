@@ -25,3 +25,7 @@ class AgentState:
     is_done: bool = False
     is_travelling: Tuple[bool, Vertex, Vertex] = (False, None, None)
     just_arrived: bool = False
+
+    def copy(self):
+        """Create a copy of itself"""
+        return dataclasses.replace(self)
