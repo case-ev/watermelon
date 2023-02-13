@@ -38,7 +38,7 @@ class Simulator:
         """Update the simulation. Should be run at every timestep"""
         LOGGER.debug("Iteration %i", self._iteration_num)
         self.time += self.delta
-        self.should_close = self.time > self.stop_time
+        self.should_close = self.time >= self.stop_time
         self._iteration_num += 1
 
         # State update code
