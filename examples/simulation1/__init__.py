@@ -1,5 +1,5 @@
 """
-examples.simulation
+examples.simulation1
 -------------------------
 Example to show how a simulation can be created, which has many agents,
 many actions and waiting times.
@@ -187,3 +187,4 @@ def main(delta=1, stop_time=180):
 
     LOGGER.info("Finished simulation, showing results")
     print(sim.data_extractor.data)
+    sim.data_extractor.data.to_csv("examples/simulation1/result.csv")
