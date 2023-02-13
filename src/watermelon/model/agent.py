@@ -32,18 +32,22 @@ class Agent(metaclass=AgentMetaClass):
         graph,
         actions=None,
         *,
-        initial_state=AgentState(),
+        initial_state=None,
         battery_capacity=None,
     ):
         self._id = identifier
         self._id_hash = hash(identifier)
         self.graph = graph
-        self.state = initial_state
 
         if battery_capacity is None:
             self.battery_capacity = DEFAULT_BATTERY_CAPACITY
         else:
             self.battery_capacity = battery_capacity
+
+        if initial_state is None:
+            self.state = AgentState()
+        else:
+            self.state = initial_state
 
         # Each element in `actions` is a 2-tuple of a vertex
         # and an action.
