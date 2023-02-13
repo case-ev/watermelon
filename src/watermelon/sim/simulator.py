@@ -106,6 +106,9 @@ class Simulator:
                     "(%s|%i) waiting in %s", agent, agent.state.current_action, vertex
                 )
                 agent.state.is_waiting = vertex.capacity < len(vertex.members)
+                if not agent.state.is_waiting:
+                    # This would happen when the agent stops waiting and acts
+                    agent.state.action_time = 0
             else:
                 time, energy = action.act(agent, vertex)
                 completion = agent.state.action_time / time if time != 0 else 1
