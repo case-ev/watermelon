@@ -132,7 +132,7 @@ class WaitAction(VertexAction):
 
     def _act(self, agent, vertex):
         energy = LEAKAGE_POWER * self.time / _MINUTES_PER_HOUR
-        return self.time, energy
+        return self.time, -energy
 
 
 class LoadMaterialAction(VertexAction):
@@ -176,7 +176,7 @@ class LoadMaterialAction(VertexAction):
             time,
             vertex,
         )
-        return time, energy
+        return time, -energy
 
 
 class DischargeMaterialAction(VertexAction):
@@ -220,4 +220,4 @@ class DischargeMaterialAction(VertexAction):
             time,
             vertex,
         )
-        return time, energy
+        return time, -energy

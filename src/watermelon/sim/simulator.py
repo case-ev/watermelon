@@ -121,7 +121,7 @@ class Simulator:
                     vertex.members.discard(agent)
                     agent.state.finished_action = True
                     self._update_soc(
-                        agent, -energy / (self.battery_eff * agent.battery_capacity)
+                        agent, energy / (self.battery_eff * agent.battery_capacity)
                     )
 
     def _check_next_action(self, agent, vertex):
