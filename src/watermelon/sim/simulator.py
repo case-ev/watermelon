@@ -8,13 +8,14 @@ of agents and runs the simulation given their decisions.
 import numpy as np
 
 from watermelon_common.logger import LOGGER
+from watermelon.defaults import BATTERY_EFFICIENCY
 from watermelon.sim.data_extractor import DataFrameExtractor
 
 
 class Simulator:
     """Object that simulates the graph"""
 
-    def __init__(self, graph, agents, *, delta=1e-3, battery_eff=0.75):
+    def __init__(self, graph, agents, *, delta=1e-3, battery_eff=BATTERY_EFFICIENCY):
         self.graph = graph
         self.agents = agents
         self.delta = delta

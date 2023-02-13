@@ -5,9 +5,7 @@ Modelling of the agent and its decisions.
 """
 
 from watermelon.model.state import AgentState
-
-
-DEFAULT_BATTERY_CAPACITY = 100000           # W * h
+from watermelon.defaults import BATTERY_CAPACITY
 
 
 class AgentMetaClass(type):
@@ -40,7 +38,7 @@ class Agent(metaclass=AgentMetaClass):
         self.graph = graph
 
         if battery_capacity is None:
-            self.battery_capacity = DEFAULT_BATTERY_CAPACITY
+            self.battery_capacity = BATTERY_CAPACITY
         else:
             self.battery_capacity = battery_capacity
 
