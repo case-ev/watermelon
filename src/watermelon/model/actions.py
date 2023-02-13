@@ -6,6 +6,8 @@ Types of actions that the agents can take
 
 import abc
 
+from watermelon.exceptions import ForbiddenActionException
+
 
 class Decision:
     """Decision containing an action and a tuple"""
@@ -25,7 +27,7 @@ class Decision:
         return self.vertex, self.action
 
 
-class VertexAction:
+class VertexAction(abc.ABC):
     """Type of action"""
 
     @staticmethod
@@ -34,6 +36,9 @@ class VertexAction:
         """Unique character that represents an action"""
 
     @abc.abstractmethod
+    def _act(self, agent, vertex):
+        """Take an action in a vertex"""
+
     def act(self, agent, vertex):
         """Make an agent take this action on a vertex.
 
@@ -52,6 +57,9 @@ class VertexAction:
         time, energy : (float, float)
             Amount of time and energy that it takes to do the action
         """
+        if self.__class__ not in vertex.type.ACTIONS:
+            raise ForbiddenActionException(self, vertex.type)
+        return self._act(agent, vertex)
 
     @classmethod
     def __repr__(cls):
@@ -69,7 +77,7 @@ class NullAction(VertexAction):
     def _char():
         return "\u03d5"  # phi
 
-    def act(self, agent, vertex):
+    def _act(self, agent, vertex):
         return 0, 0
 
 
@@ -80,7 +88,7 @@ class ChargeBatteryAction(VertexAction):
     def _char():
         return "c"
 
-    def act(self, agent, vertex):
+    def _act(self, agent, vertex):
         return 0, 0
 
 
@@ -91,7 +99,7 @@ class WaitAction(VertexAction):
     def _char():
         return "w"
 
-    def act(self, agent, vertex):
+    def _act(self, agent, vertex):
         return 0, 0
 
 
@@ -102,7 +110,7 @@ class LoadMaterialAction(VertexAction):
     def _char():
         return "x"
 
-    def act(self, agent, vertex):
+    def _act(self, agent, vertex):
         return 0, 0
 
 
@@ -113,5 +121,5 @@ class DischargeMaterialAction(VertexAction):
     def _char():
         return "o"
 
-    def act(self, agent, vertex):
+    def _act(self, agent, vertex):
         return 0, 0
