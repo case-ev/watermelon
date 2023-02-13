@@ -31,16 +31,12 @@ class Agent(metaclass=AgentMetaClass):
         actions=None,
         *,
         initial_state=None,
-        battery_capacity=None,
+        battery_capacity=BATTERY_CAPACITY,
     ):
         self._id = identifier
         self._id_hash = hash(identifier)
         self.graph = graph
-
-        if battery_capacity is None:
-            self.battery_capacity = BATTERY_CAPACITY
-        else:
-            self.battery_capacity = battery_capacity
+        self.battery_capacity = battery_capacity
 
         if initial_state is None:
             self.state = AgentState()
