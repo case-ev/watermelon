@@ -6,6 +6,7 @@ Types of actions that the agents can take
 
 import abc
 
+from watermelon_common.logger import LOGGER
 from watermelon.defaults import BATTERY_EFFICIENCY, LEAKAGE_POWER
 from watermelon.exceptions import ForbiddenActionException
 
@@ -112,8 +113,11 @@ class ChargeBatteryAction(VertexAction):
     def _act(self, agent, vertex):
         if agent.state.soc >= self.limit:
             return 0, 0
-        energy = (self.limit - agent.state.soc) / (self.battery_eff * agent.battery_capacity)
+        energy = (self.limit - agent.state.soc) / (
+            self.battery_eff * agent.battery_capacity
+        )
         time = _MINUTES_PER_HOUR * energy / vertex.type.charge_power
+        LOGGER.info("%s charging %d Wh (%d minutes) at %s", agent, energy, time, vertex)
         return time, energy
 
 
@@ -166,6 +170,14 @@ class LoadMaterialAction(VertexAction):
         leakage_energy = LEAKAGE_POWER * time / _MINUTES_PER_HOUR
         action_energy = 0
         energy = leakage_energy + action_energy
+        LOGGER.info(
+            "%s Loading %d kg (%d Wh, %d minutes) at %s",
+            agent,
+            material,
+            energy,
+            time,
+            vertex,
+        )
         return time, energy
 
 
@@ -202,4 +214,12 @@ class DischargeMaterialAction(VertexAction):
         leakage_energy = LEAKAGE_POWER * time / _MINUTES_PER_HOUR
         action_energy = 0
         energy = leakage_energy + action_energy
+        LOGGER.info(
+            "%s Discharging %d kg (%d Wh, %d minutes) at %s",
+            agent,
+            material,
+            energy,
+            time,
+            vertex,
+        )
         return time, energy
