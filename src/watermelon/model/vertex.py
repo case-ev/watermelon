@@ -31,7 +31,7 @@ class Vertex(metaclass=VertexMetaClass):
         self._id = identifier
         self._id_hash = hash(identifier)
         self.type = vertex_type
-        self.members = []
+        self.members = set()
         self.capacity = float("inf") if capacity is None else capacity
 
     def __hash__(self):

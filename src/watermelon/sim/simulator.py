@@ -94,7 +94,7 @@ class Simulator:
         else:
             # It is doing some action
             if agent.state.just_arrived:
-                vertex.members.append(agent)
+                vertex.members.add(agent)
                 agent.state.is_waiting = True
                 agent.state.just_arrived = False
 
@@ -113,6 +113,7 @@ class Simulator:
                     100 * completion,
                 )
                 if agent.state.action_time > time:
+                    vertex.members.discard(agent)
                     agent.state.finished_action = True
                     agent.state.soc -= energy / (
                         self.battery_eff * agent.battery_capacity
