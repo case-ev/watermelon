@@ -35,12 +35,12 @@ def ex_graph2():
         .add_vertices(
             [
                 wm.Vertex(0),
-                wm.Vertex(1, 10, wm.MaterialDischargeType(10)),
+                wm.Vertex(1, 10, wm.MaterialDischargeType(10000)),
                 wm.Vertex(2, 5, wm.EVChargerType(50000)),
                 wm.Vertex(3),
                 wm.Vertex(4),
                 wm.Vertex(5),
-                wm.Vertex(6, 10, wm.MaterialLoadType(10)),
+                wm.Vertex(6, 10, wm.MaterialLoadType(10000)),
                 wm.Vertex(7, 5, wm.EVChargerType(50000)),
             ]
         )
