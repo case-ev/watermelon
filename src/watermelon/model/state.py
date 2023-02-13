@@ -17,7 +17,7 @@ class AgentState:
 
     vertex: Vertex = None
     action: VertexAction = None
-    soc: float = 1
+    _soc: float = 1
     current_action: int = 0
     action_time: float = 0
     finished_action: bool = False
@@ -27,6 +27,15 @@ class AgentState:
     just_arrived: bool = False
     out_of_charge: bool = False
     overcharged: bool = False
+
+    @property
+    def soc(self):
+        """State of charge of the battery"""
+        return self._soc
+
+    @soc.setter
+    def soc(self, val):
+        self._soc = val
 
     def copy(self):
         """Create a copy of itself"""
