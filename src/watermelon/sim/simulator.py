@@ -42,11 +42,14 @@ class Simulator:
         self._iteration_num += 1
 
         # State update code
+        finished_simulation = True
         for agent in self.agents:
             agent.state.action_time += self.delta
+            finished_simulation &= agent.state.is_done
 
             if not agent.state.is_done:
                 self._update_agent(agent)
+        self.should_close |= finished_simulation
 
         # Store the data
         try:
@@ -116,7 +119,7 @@ class Simulator:
         if agent.state.finished_action:
             # Send the agent to sleep if there are no more actions left
             if agent.state.current_action + 1 >= len(agent.actions):
-                LOGGER.info("Agent finished")
+                LOGGER.info("Agent %s finished", agent)
                 agent.state.is_done = True
                 agent.state.action_time = 0
             else:
