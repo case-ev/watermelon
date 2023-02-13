@@ -7,9 +7,9 @@ only serve the purpose of giving easy-to-test values to examples.
 
 
 # Agents
-BATTERY_CAPACITY = 100000           # W * h
-MATERIAL_CAPACITY = 50000           # kg
+BATTERY_CAPACITY = 100000  # W * h
+MATERIAL_CAPACITY = 50000  # kg
 
 # Simulation
 BATTERY_EFFICIENCY = 0.75
-LEAKAGE_POWER = 0                   # W
+LEAKAGE_POWER = 0  # W
