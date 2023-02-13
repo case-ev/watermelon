@@ -5,7 +5,7 @@ Modelling of the agent and its decisions.
 """
 
 from watermelon.model.state import AgentState
-from watermelon.defaults import BATTERY_CAPACITY
+from watermelon.defaults import BATTERY_CAPACITY, MATERIAL_CAPACITY
 
 
 class AgentMetaClass(type):
@@ -32,11 +32,13 @@ class Agent(metaclass=AgentMetaClass):
         *,
         initial_state=None,
         battery_capacity=BATTERY_CAPACITY,
+        material_capacity=MATERIAL_CAPACITY,
     ):
         self._id = identifier
         self._id_hash = hash(identifier)
         self.graph = graph
         self.battery_capacity = battery_capacity
+        self.material_capacity = material_capacity
 
         if initial_state is None:
             self.state = AgentState()
