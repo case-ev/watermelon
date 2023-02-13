@@ -70,7 +70,7 @@ class MaterialLoadType(VertexType):
 
     @property
     def load_rate(self):
-        """Rate at which material is loaded"""
+        """Rate in kg/minute at which material is loaded"""
         return self._load_rate
 
 
