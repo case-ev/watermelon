@@ -70,7 +70,7 @@ class DataFrameExtractor(SimulationDataExtractor):
         return {
             **{"time": [simulation.time]},
             **{
-                a: DataElement(a.actions[a.state.current_action], a.state)
+                a: DataElement(a.actions[a.state.current_action], a.state.copy())
                 for a in simulation.agents
             },
         }
