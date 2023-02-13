@@ -88,5 +88,5 @@ class MaterialDischargeType(VertexType):
 
     @property
     def discharge_rate(self):
-        """Rate at which material is discharged"""
+        """Rate in kg/minute at which material is discharged"""
         return self._discharge_rate
