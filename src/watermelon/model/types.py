@@ -31,7 +31,7 @@ class VertexType(abc.ABC):
 class EmptyVertexType(VertexType):
     """Empty node"""
 
-    ACTIONS = [actions.NullAction(), actions.WaitAction()]
+    ACTIONS = [actions.NullAction, actions.WaitAction]
 
     @staticmethod
     def _char():
@@ -41,7 +41,7 @@ class EmptyVertexType(VertexType):
 class EVChargerType(VertexType):
     """Charger for electric vehicles"""
 
-    ACTIONS = [actions.ChargeBatteryAction(), actions.NullAction(), actions.WaitAction()]
+    ACTIONS = [actions.ChargeBatteryAction, actions.NullAction, actions.WaitAction]
 
     def __init__(self, charge_power):
         self._charge_power = charge_power
@@ -59,7 +59,7 @@ class EVChargerType(VertexType):
 class MaterialLoadType(VertexType):
     """Load material"""
 
-    ACTIONS = [actions.LoadMaterialAction(), actions.NullAction(), actions.WaitAction()]
+    ACTIONS = [actions.LoadMaterialAction, actions.NullAction, actions.WaitAction]
 
     def __init__(self, load_rate):
         self._load_rate = load_rate
@@ -77,7 +77,7 @@ class MaterialLoadType(VertexType):
 class MaterialDischargeType(VertexType):
     """Discharge material"""
 
-    ACTIONS = [actions.DischargeMaterialAction(), actions.NullAction(), actions.WaitAction()]
+    ACTIONS = [actions.DischargeMaterialAction, actions.NullAction, actions.WaitAction]
 
     def __init__(self, discharge_rate):
         self._discharge_rate = discharge_rate
