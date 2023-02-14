@@ -15,10 +15,15 @@ from watermelon.exceptions import NonExistentEdgeException
 class Graph:
     """Data structure for an abstract graph"""
 
-    def __init__(self):
+    def __init__(self, vertices=None, edges=None):
         self._verts_id = {}
         self._vertices = set()
         self._adj_mat = pd.DataFrame()
+
+        if vertices is not None:
+            self.add_vertices(vertices)
+        if edges is not None:
+            self.add_edges(edges)
 
     def __repr__(self):
         return repr(self._adj_mat)
