@@ -1,3 +1,5 @@
+Example guidelines - Watermelon
+
 ---
 
 ## How to run examples
