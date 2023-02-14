@@ -1,0 +1,17 @@
+body {
+    background-color: #0e0e0e;
+    margin: 5%;
+    color: #cccccc;
+    font-size: 15pt;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    scrollbar-width: 15px;
+    scrollbar-color: #cccccc #0e0e0e;
+}
+
+hr {
+    border: 3px solid #cccccc;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
