@@ -5,64 +5,102 @@ Main functionality of the simulator, which takes a graph and a collection
 of agents and runs the simulation given their decisions.
 """
 
-import numpy as np
-
 from watermelon_common.logger import LOGGER
 from watermelon.defaults import BATTERY_EFFICIENCY
 from watermelon.sim.data_extractor import DataFrameExtractor
 
 
+class SimulationParameters:
+    """Parameters for the simulation"""
+
+    def __init__(self, *, battery_eff=BATTERY_EFFICIENCY, **_):
+        self.battery_eff = battery_eff
+
+
+class SimulationControl:
+    """Control variables for the simulation"""
+
+    def __init__(
+        self,
+        *,
+        time=0.0,
+        delta=1e-3,
+        iteration=0,
+        should_close=False,
+        stop_time=0.0,
+        data_extractor=None,
+        **_,
+    ):
+        self.time = time
+        self.delta = delta
+        self.iteration = iteration
+        self.should_close = should_close
+        self.stop_time = stop_time
+        self.data_extractor = data_extractor
+
+
 class Simulator:
     """Object that simulates the graph"""
 
-    def __init__(self, graph, agents, *, delta=1e-3, battery_eff=BATTERY_EFFICIENCY):
+    def __init__(self, graph, agents, control=None, params=None, **kwargs):
         self.graph = graph
         self.agents = agents
-        self.delta = delta
-        self.time = 0.0
-        self.state = np.array([a.actions[0] for a in agents])
-        self.data_extractor = None
-        self.battery_eff = battery_eff
-        self._iteration_num = 0
-        self.should_close = False
-        self.stop_time = 0
+        self.control = SimulationControl(**kwargs) if control is None else control
+        self.params = SimulationParameters(**kwargs) if params is None else params
+
+    @property
+    def time(self):
+        """Current time of the simulation"""
+        return self.control.time
+
+    @property
+    def should_close(self):
+        """Control variable that indicates if the simulation should end"""
+        return self.control.should_close
+
+    @property
+    def data_extractor(self):
+        """Extractor for the simulation data"""
+        return self.control.data_extractor
 
     def start(self, stop_time, *, extractor_cls=DataFrameExtractor):
         """Start the simulation. It must be ran before you start updating"""
         LOGGER.info("Starting simulation")
-        self.data_extractor = extractor_cls(self)
-        self._iteration_num = 0
-        self.stop_time = stop_time
-        self.should_close = False
+        self.control.data_extractor = extractor_cls(self)
+        self.control.iteration = 0
+        self.control.stop_time = stop_time
+        self.control.should_close = False
 
     def update(self):
         """Update the simulation. Should be run at every timestep"""
-        LOGGER.debug("Iteration %i", self._iteration_num)
-        self.time += self.delta
-        self.should_close = self.time >= self.stop_time
-        self._iteration_num += 1
+        LOGGER.debug(
+            "Iteration %i @ time %.2f", self.control.iteration, self.control.time
+        )
+        self.control.time += self.control.delta
+        self.control.should_close = self.control.time >= self.control.stop_time
+        self.control.iteration += 1
 
         # State update code
         finished_simulation = True
         for agent in self.agents:
-            agent.state.action_time += self.delta
+            agent.state.action_time += self.control.delta
             finished_simulation &= agent.state.is_done
 
             if not (agent.state.is_done or agent.state.out_of_charge):
                 self._update_agent(agent)
-        self.should_close |= finished_simulation
+        self.control.should_close |= finished_simulation
 
-        if self.should_close and not finished_simulation:
+        if self.control.should_close and not finished_simulation:
             LOGGER.warning("Reached stop time but some agents haven't finished")
 
         # Store the data
         try:
-            self.data_extractor.append(self)
+            self.control.data_extractor.append(self)
         except AttributeError:
             LOGGER.error(
                 "Failed to append data to the extractor. Did you forget to start the simulation?"
             )
-            self.should_close = True
+            self.control.should_close = True
 
     def _update_agent(self, agent):
         decision = agent.actions[agent.state.current_action]
@@ -92,7 +130,8 @@ class Simulator:
                 agent.state.just_arrived = True
                 agent.state.action_time = 0
                 self._update_soc(
-                    agent, -edge.weight / (self.battery_eff * agent.battery_capacity)
+                    agent,
+                    -edge.weight / (self.params.battery_eff * agent.battery_capacity),
                 )
         else:
             # It is doing some action
@@ -124,7 +163,8 @@ class Simulator:
                     vertex.members.discard(agent)
                     agent.state.finished_action = True
                     self._update_soc(
-                        agent, energy / (self.battery_eff * agent.battery_capacity)
+                        agent,
+                        energy / (self.params.battery_eff * agent.battery_capacity),
                     )
 
     def _check_next_action(self, agent, vertex):
