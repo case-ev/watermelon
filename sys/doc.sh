@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script compiles all the documentation to HTML. It is not necessary, since
+# the documentation is readable as a Markdown file.
 
 mkdir build/doc/temp -p
 cd doc
