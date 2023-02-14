@@ -17,3 +17,6 @@ for file in *; do
         pandoc -f markdown -t html "${BUILD_DIR}/temp/${filename}.md" -o "${BUILD_DIR}/${filename}.html" --css=styles/main.css --embed-resources --standalone --metadata title="$title"
     fi
 done
+
+echo -e "Removing temp directory"
+rm -rf "${BUILD_DIR}/temp/"
