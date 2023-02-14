@@ -180,6 +180,22 @@ class Graph:
             .to_list()
         )
 
+    def draw(self, axis=None, pos_fn=None, **kwargs):
+        """Draw this graph using matplotlib
+
+        It takes the graph, turns it into the convention used by networkx by taking the
+        adjacency matrix first, and then draws it
+
+        Parameters
+        ----------
+        axis : matplotlib.pyplot.Axes, optional
+            Axis to draw the graph on, by default None. If None, it creates a new figure
+            and axis.
+        pos_fn : function_, optional
+            Function to use to determine the position of the vertices, by default None.
+        """
+        return draw_graph(self, axis, pos_fn, **kwargs)
+
 
 def draw_graph(graph, axis=None, pos_fn=None, **kwargs):
     """Draw a graph using matplotlib
