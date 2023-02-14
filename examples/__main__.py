@@ -54,11 +54,8 @@ parser.add_argument(
 )
 
 cmd_args = parser.parse_args()
-try:
-    setup_logger(cmd_args.quiet, cmd_args.debug, cmd_args.verbose, cmd_args.log)
-except FileNotFoundError:
-    os.mkdir(cmd_args.log)
-    setup_logger(cmd_args.quiet, cmd_args.debug, cmd_args.verbose, cmd_args.log)
+os.makedirs(cmd_args.log, exist_ok=True)
+setup_logger(cmd_args.quiet, cmd_args.debug, cmd_args.verbose, cmd_args.log)
 
 # Get the attributes
 name = cmd_args.args[0]
