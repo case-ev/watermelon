@@ -5,12 +5,14 @@ Example to show how a simulation can be created, which has many agents,
 many actions and waiting times.
 """
 
+import matplotlib.pyplot as plt
+
 from watermelon_common.logger import LOGGER
 from examples._graphs.toy import ex_graph2
 import watermelon as wm
 
 
-def main(delta=1, stop_time=180):
+def main(delta=1, stop_time=180, show=False):
     """Entry point for the example"""
 
     LOGGER.info("Parsing example arguments")
@@ -21,6 +23,11 @@ def main(delta=1, stop_time=180):
     graph = ex_graph2()
     print("Using the following graph")
     print(graph)
+
+    if show:
+        _, ax = plt.subplots()
+        wm.draw_graph(graph, axis=ax)
+        plt.show()
 
     LOGGER.info("Creating agents")
     agents = [
