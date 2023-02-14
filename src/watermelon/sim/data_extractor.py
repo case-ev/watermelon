@@ -25,7 +25,9 @@ class DataElement:
         soc_str = f"{100 * self.state.soc:.1f}"
 
         if self.state.is_travelling[0]:
-            vertex_str = f"({str(self.prev_decision.vertex)}->{str(self.decision.vertex)})"
+            vertex_str = (
+                f"({str(self.prev_decision.vertex)}->{str(self.decision.vertex)})"
+            )
         else:
             vertex_str = f"{str(self.decision)}"
         result = f"{soc_str}% @ {vertex_str}, {self.state.action_time:.2f}min"
