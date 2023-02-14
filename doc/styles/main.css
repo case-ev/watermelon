@@ -1,6 +1,7 @@
 :root {
     --code-color: #1f1f1f;
-    --code-padding: 3px;
+    --code-padding: 1px;
+    --code-padding-sides: 3px;
     --code-border-radius: 10px;
 }
 
@@ -25,6 +26,8 @@ hr {
 code {
     background-color: var(--code-color);
     padding: var(--code-padding);
+    padding-left: var(--code-padding-sides);
+    padding-right: var(--code-padding-sides);
     border-radius: var(--code-border-radius);
     border: none;
 }
@@ -32,6 +35,8 @@ code {
 .sourceCode {
     background-color: var(--code-color);
     padding: var(--code-padding);
+    padding-left: var(--code-padding-sides);
+    padding-right: var(--code-padding-sides);
     border-radius: var(--code-border-radius);
     border: none;
 }
