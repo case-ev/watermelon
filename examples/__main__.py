@@ -67,7 +67,10 @@ for arg in map(lambda x: x.split("="), cmd_args.args[1:]):
         key, val = arg
         ex_kwargs[key] = val
     else:
-        ex_args.extend(arg)
+        if arg[0][0] == "+":
+            ex_kwargs[arg[0][1:]] = True
+        else:
+            ex_args.extend(arg)
 
 # Run the example
 print(
