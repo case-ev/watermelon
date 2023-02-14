@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 
 from watermelon_common.logger import LOGGER
+from watermelon.model.vertex import Vertex
 from watermelon.exceptions import NonExistentEdgeException
 
 
@@ -71,11 +72,17 @@ class Graph:
         -------
         self
         """
-        LOGGER.debug("Adding vertex %s", vertex)
-        self._vertices.add(vertex)
-        self._verts_id[vertex.hash] = vertex
-        self._adj_mat[vertex] = np.nan
-        self._adj_mat.loc[vertex] = np.nan
+        # Allow creation from a hashable type
+        if isinstance(vertex, Vertex):
+            parsed_vertex = vertex
+        else:
+            parsed_vertex = Vertex(vertex)
+
+        LOGGER.debug("Adding vertex %s", parsed_vertex)
+        self._vertices.add(parsed_vertex)
+        self._verts_id[parsed_vertex.hash] = parsed_vertex
+        self._adj_mat[parsed_vertex] = np.nan
+        self._adj_mat.loc[parsed_vertex] = np.nan
         return self
 
     def add_vertices(self, vertices):
