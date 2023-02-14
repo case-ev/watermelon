@@ -52,7 +52,7 @@ class Simulator:
                 self._update_agent(agent)
         self.should_close |= finished_simulation
 
-        if self.time > self.stop_time and not finished_simulation:
+        if self.should_close and not finished_simulation:
             LOGGER.warning("Reached stop time but some agents haven't finished")
 
         # Store the data
