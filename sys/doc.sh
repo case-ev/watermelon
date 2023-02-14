@@ -7,6 +7,22 @@ mkdir build/doc/temp -p
 cd doc
 
 BUILD_DIR="../build/doc"
+target="html"
+
+while getopts "hpT:" arg
+do
+    case "$arg" in
+        h)
+            target="html"
+            ;;
+        p)
+            target="pdf"
+            ;;
+        T)
+            target="${OPTARG}"
+            ;;
+    esac
+done
 
 for file in *; do
     if [ -f "$file" ]; then
@@ -14,7 +30,7 @@ for file in *; do
         filename="${file%.md}"
         title=`cat "$file" | head -n 1`
         cat "$file" | tail -n +2 > "${BUILD_DIR}/temp/${filename}.md"
-        pandoc -f markdown -t html "${BUILD_DIR}/temp/${filename}.md" -o "${BUILD_DIR}/${filename}.html" --css=styles/main.css --embed-resources --standalone --metadata title="$title"
+        pandoc -f markdown -t $target "${BUILD_DIR}/temp/${filename}.md" -o "${BUILD_DIR}/${filename}.${target}" --css=styles/main.css --embed-resources --standalone --metadata title="$title"
     fi
 done
 
