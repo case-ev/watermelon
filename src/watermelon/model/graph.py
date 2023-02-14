@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 
 from watermelon_common.logger import LOGGER
+from watermelon.exceptions import NonExistentEdgeException
 
 
 class Graph:
@@ -147,7 +148,10 @@ class Graph:
         """Get the edge that connects two vertices"""
         vert1 = self._parse_vertex(vert1)
         vert2 = self._parse_vertex(vert2)
-        return self._adj_mat[vert2][vert1]
+        result = self._adj_mat[vert2][vert1]
+        if pd.isnull(result):
+            raise NonExistentEdgeException(vert1, vert2)
+        return result
 
     def adjacent(self, vert1, vert2):
         """Indicate whether two vertices are adjacent"""
