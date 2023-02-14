@@ -15,3 +15,9 @@ hr {
     border-bottom-left-radius: 50%;
     border-bottom-right-radius: 50%;
 }
+
+code {
+    background-color: #2f2f2f;
+    padding: 3px;
+    border-radius: 10px;
+}
