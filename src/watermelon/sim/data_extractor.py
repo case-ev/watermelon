@@ -19,18 +19,24 @@ class DataElement:
 
     decision: Decision
     state: AgentState
+    prev_decision: Decision = None
 
     def __str__(self):
-        result = f"{str(self.decision)}, {100 * self.state.soc:.1f}%, \
-time={self.state.action_time:.2f} "
+        soc_str = f"{100 * self.state.soc:.1f}"
+
         if self.state.is_travelling[0]:
-            result += "[T]"
+            vertex_str = f"({str(self.prev_decision.vertex)}->{str(self.decision.vertex)})"
+        else:
+            vertex_str = f"{str(self.decision)}"
+        result = f"{soc_str}% @ {vertex_str}, {self.state.action_time:.2f}min"
+
         if self.state.is_done:
-            result += "[F]"
+            result = f"FINISHED, {self.state.action_time:.2f}min"
         if self.state.is_waiting:
-            result += "[W]"
+            result = f"WAITING, {soc_str}% @ {vertex_str}, {result}"
         if self.state.out_of_charge:
-            result += "[D]"
+            result = f"OOC @ {vertex_str}, {self.state.action_time:.2f}min"
+
         if self.state.overcharged:
             result += "[O]"
         return result
@@ -71,10 +77,11 @@ class DataFrameExtractor(SimulationDataExtractor):
     @staticmethod
     def extract_data(simulation):
         """Extract some input data according to the required format"""
-        return {
-            **{"time": [simulation.time]},
-            **{
-                a: DataElement(a.actions[a.state.current_action], a.state.copy())
-                for a in simulation.agents
-            },
-        }
+        states = {}
+        for a in simulation.agents:
+            i = a.state.current_action
+            if i != 0:
+                states[a] = DataElement(a.actions[i], a.state.copy(), a.actions[i - 1])
+            else:
+                states[a] = DataElement(a.actions[i], a.state.copy(), None)
+        return {"time": [simulation.time], **states}
