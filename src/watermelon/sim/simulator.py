@@ -143,6 +143,7 @@ class Simulator:
                 agent.state.finished_action = False
 
     def _update_soc(self, agent, soc_delta):
+        prev_soc = agent.state.soc
         agent.state.soc += soc_delta
         if agent.state.soc <= 0:
             agent.state.soc = 0
@@ -152,3 +153,6 @@ class Simulator:
         else:
             agent.state.out_of_charge = False
             agent.state.overcharged = False
+
+        if agent.state.out_of_charge and prev_soc != 0:
+            LOGGER.warning("%s ran out of charge", agent)
