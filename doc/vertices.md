@@ -28,3 +28,5 @@ As said previously, the allowed actions depend on the type of the current vertex
 - `EVChargerType`: ϕ, w, c
 - `MaterialLoadType`: ϕ, w, x
 - `MaterialDischargeType`: ϕ, w, o
+
+To add a new type, create a class that inherits from `VertexType` and implements the `\_char()` static method, which returns the unique character associated to that vertex type. It also has to contain a class attribute called `ACTIONS`, which corresponds to a list containing all the allowed actions.
