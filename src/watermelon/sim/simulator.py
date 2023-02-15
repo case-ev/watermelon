@@ -133,7 +133,8 @@ class Simulator:
                     agent,
                     -edge.weight / (self.params.battery_eff * agent.battery_capacity),
                 )
-        else:
+
+        if not agent.state.is_travelling[0]:
             # It is doing some action
             if agent.state.just_arrived:
                 vertex.members.add(agent)
@@ -148,7 +149,8 @@ class Simulator:
                 if not agent.state.is_waiting:
                     # This would happen when the agent stops waiting and acts
                     agent.state.action_time = 0
-            else:
+
+            if not agent.state.is_waiting:
                 time, energy = action.act(agent, vertex)
                 completion = agent.state.action_time / time if time != 0 else 1
                 LOGGER.debug(
