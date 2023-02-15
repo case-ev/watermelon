@@ -27,7 +27,7 @@ class Agent(metaclass=AgentMetaClass):
     def __init__(
         self,
         identifier,
-        graph,
+        graph=None,
         actions=None,
         *,
         initial_state=None,
