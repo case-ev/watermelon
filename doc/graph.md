@@ -1,9 +1,9 @@
-Graph creation and usage- Watermelon
+Graph creation and usage - Watermelon
 
 ---
 
 ## How to create a graph
-To create a graph, you must first initialize the corresponding vertices and edges, which are created by `watermelon.Vertex` and `watermelon.Edge`, respectively.
+To create a graph, you must first initialize the corresponding vertices and edges, which are created by `Vertex` and `Edge`, respectively.
 
 For vertices, they each take:
 
@@ -23,4 +23,4 @@ On the other hand, for edges each one takes:
 - An associated optional weight. This weight indicates the amount of energy in Wh that it takes to travel the edge in the graph.
 - An optional time parameter, which indicates how long (in minutes) it takes to cross the edge.
 
-Once you have created all the necessary vertices and edges, you can create a graph using `watermelon.Graph`. You can choose to initialize it directly with the vertices and edges, or initialize an empty graph and add them later using the `add_vertex/add_vertices` and `add_edge/add_edges` methods, respectively.
+Once you have created all the necessary vertices and edges, you can create a graph using `Graph`. You can choose to initialize it directly with the vertices and edges, or initialize an empty graph and add them later using the `add_vertex/add_vertices` and `add_edge/add_edges` methods, respectively.
