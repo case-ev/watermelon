@@ -29,4 +29,6 @@ As said previously, the allowed actions depend on the type of the current vertex
 - `MaterialLoadType`: ϕ, w, x
 - `MaterialDischargeType`: ϕ, w, o
 
-To add a new type, create a class that inherits from `VertexType` and implements the `\_char()` static method, which returns the unique character associated to that vertex type. It also has to contain a class attribute called `ACTIONS`, which corresponds to a list containing all the allowed actions.
+To add a new type, create a class that inherits from `VertexType` and implements the `_char()` static method, which returns the unique character associated to that vertex type. It also has to contain a class attribute called `ACTIONS`, which corresponds to a list containing all the allowed actions.
+
+For a new action, the created class has to inherit from `VertexAction` and implement the `_char()` static method, which returns the unique character that identifies that action, as well as the `_act()` method, which takes an agent and a vertex and determines the necessary time and energy to take the action.
