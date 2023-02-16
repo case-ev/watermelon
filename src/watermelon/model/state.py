@@ -7,6 +7,8 @@ Functionality for the state of the agent
 from typing import Tuple
 import dataclasses
 
+import numpy as np
+
 from watermelon.model.vertex import Vertex
 from watermelon.model.actions import VertexAction
 
@@ -32,11 +34,30 @@ class AgentState:
     @property
     def soc(self):
         """State of charge of the battery"""
+        return np.clip(self._soc + np.random.normal(0, 0.01), 0, 1)
+
+    @property
+    def true_soc(self):
+        """True state of charge. In reality this would be unobtainable, but it
+        is left as available for simulation purposes.
+        """
         return self._soc
 
     @soc.setter
     def soc(self, val):
+        self.true_soc = np.clip(val + np.random.normal(0, 0.01), 0, 1)
+
+    @true_soc.setter
+    def true_soc(self, val):
         self._soc = val
+        if self._soc <= 0:
+            self._soc = 0
+            self.out_of_charge = True
+        elif self._soc > 1:
+            self.overcharged = True
+        else:
+            self.out_of_charge = False
+            self.overcharged = False
 
     def copy(self):
         """Create a copy of itself"""

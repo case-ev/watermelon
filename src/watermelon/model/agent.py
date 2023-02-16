@@ -5,7 +5,7 @@ Modelling of the agent and its decisions.
 """
 
 from watermelon.model.state import AgentState
-from watermelon.defaults import BATTERY_CAPACITY, MATERIAL_CAPACITY
+from watermelon.defaults import BATTERY_CAPACITY, MATERIAL_CAPACITY, BATTERY_EFFICIENCY
 
 
 class AgentMetaClass(type):
@@ -78,3 +78,7 @@ class Agent(metaclass=AgentMetaClass):
     def hash(self):
         """Hash of the unique ID of the agent."""
         return self._id_hash
+
+    def insert_energy(self, energy_delta, battery_efficiency=BATTERY_EFFICIENCY):
+        """Insert/remove a given amount of energy from the battery"""
+        self.state.true_soc += energy_delta / (battery_efficiency * self.battery_capacity)
