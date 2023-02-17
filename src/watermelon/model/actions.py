@@ -109,10 +109,10 @@ class ChargeBatteryAction(VertexAction):
         return "c"
 
     def _act(self, agent, vertex):
-        if agent.state.soc >= self.limit:
+        if agent.soc >= self.limit:
             return 0, 0
         energy = (
-            (self.limit - agent.state.soc) * self.battery_eff * agent.battery_capacity
+            (self.limit - agent.soc) * self.battery_eff * agent.battery_capacity
         )
         time = _MINUTES_PER_HOUR * energy / vertex.type.charge_power
         LOGGER.info(

@@ -4,7 +4,10 @@ watermelon.model.agent
 Modelling of the agent and its decisions.
 """
 
+import numpy as np
+
 from watermelon.model.state import AgentState
+from watermelon.model.uncertainty import NoUncertainty
 from watermelon.defaults import BATTERY_CAPACITY, MATERIAL_CAPACITY, BATTERY_EFFICIENCY
 
 
@@ -30,6 +33,7 @@ class Agent(metaclass=AgentMetaClass):
         graph=None,
         actions=None,
         *,
+        uncertainty=None,
         initial_state=None,
         battery_capacity=BATTERY_CAPACITY,
         material_capacity=MATERIAL_CAPACITY,
@@ -39,18 +43,12 @@ class Agent(metaclass=AgentMetaClass):
         self.graph = graph
         self.battery_capacity = battery_capacity
         self.material_capacity = material_capacity
-
-        if initial_state is None:
-            self.state = AgentState()
-        else:
-            self.state = initial_state
+        self.uncertainty = NoUncertainty() if uncertainty is None else uncertainty
+        self.state = AgentState() if initial_state is None else initial_state
 
         # Each element in `actions` is a 2-tuple of a vertex
         # and an action.
-        if actions is None:
-            self.actions = []
-        else:
-            self.actions = actions
+        self.actions = [] if actions is None else actions
 
     def __hash__(self):
         return self.hash
@@ -81,6 +79,15 @@ class Agent(metaclass=AgentMetaClass):
 
     def insert_energy(self, energy_delta, battery_efficiency=BATTERY_EFFICIENCY):
         """Insert/remove a given amount of energy from the battery"""
-        self.state.true_soc += energy_delta / (
+        self.state.soc += energy_delta / (
             battery_efficiency * self.battery_capacity
         )
+
+    @property
+    def soc(self):
+        """State of charge of the agent"""
+        return np.clip(self.state.soc + self.uncertainty.sample(), 0, 1)
+
+    @soc.setter
+    def soc(self, val):
+        self.state.soc = val + self.uncertainty.sample()
