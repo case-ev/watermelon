@@ -15,17 +15,6 @@ from watermelon.model.vertex import Vertex
 
 
 @dataclasses.dataclass
-class _AgentControlFlags:
-    finished_action: bool = False
-    is_waiting: bool = False
-    is_done: bool = False
-    is_travelling: Tuple[bool, Vertex, Vertex] = (False, None, None)
-    just_arrived: bool = False
-    out_of_charge: bool = False
-    overcharged: bool = False
-
-
-@dataclasses.dataclass
 class AgentState:
     """State of an agent at an instant"""
 
@@ -36,10 +25,13 @@ class AgentState:
     current_action: int = 0
     action_time: float = 0
     uncertainty: UncertaintySource = GaussianUncertainty()
-    flags: _AgentControlFlags = None
-
-    def __post_init__(self):
-        self.flags = _AgentControlFlags()
+    finished_action: bool = False
+    is_waiting: bool = False
+    is_done: bool = False
+    is_travelling: Tuple[bool, Vertex, Vertex] = (False, None, None)
+    just_arrived: bool = False
+    out_of_charge: bool = False
+    overcharged: bool = False
 
     @property
     def soc(self):
