@@ -25,7 +25,7 @@ class UncertaintySource(abc.ABC):
 class GaussianUncertainty(UncertaintySource):
     """Model for gaussian uncertainty"""
 
-    def __init__(self, mean=0, std=1):
+    def __init__(self, mean=0, std=0.001):
         self.mean = mean
         self.std = std
         self._last_sample = None
