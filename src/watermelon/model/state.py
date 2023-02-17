@@ -9,8 +9,20 @@ import dataclasses
 
 import numpy as np
 
-from watermelon.model.vertex import Vertex
 from watermelon.model.actions import VertexAction
+from watermelon.model.uncertainty import UncertaintySource, GaussianUncertainty
+from watermelon.model.vertex import Vertex
+
+
+@dataclasses.dataclass
+class _AgentControlFlags:
+    finished_action: bool = False
+    is_waiting: bool = False
+    is_done: bool = False
+    is_travelling: Tuple[bool, Vertex, Vertex] = (False, None, None)
+    just_arrived: bool = False
+    out_of_charge: bool = False
+    overcharged: bool = False
 
 
 @dataclasses.dataclass
@@ -23,18 +35,16 @@ class AgentState:
     payload: float = 0
     current_action: int = 0
     action_time: float = 0
-    finished_action: bool = False
-    is_waiting: bool = False
-    is_done: bool = False
-    is_travelling: Tuple[bool, Vertex, Vertex] = (False, None, None)
-    just_arrived: bool = False
-    out_of_charge: bool = False
-    overcharged: bool = False
+    uncertainty: UncertaintySource = GaussianUncertainty()
+    flags: _AgentControlFlags = None
+
+    def __post_init__(self):
+        self.flags = _AgentControlFlags()
 
     @property
     def soc(self):
         """State of charge of the battery"""
-        return np.clip(self._soc + np.random.normal(0, 0.01), 0, 1)
+        return np.clip(self._soc + self.uncertainty.sample(), 0, 1)
 
     @property
     def true_soc(self):
@@ -45,7 +55,7 @@ class AgentState:
 
     @soc.setter
     def soc(self, val):
-        self.true_soc = np.clip(val + np.random.normal(0, 0.01), 0, 1)
+        self.true_soc = np.clip(val + self.uncertainty.sample(), 0, 1)
 
     @true_soc.setter
     def true_soc(self, val):

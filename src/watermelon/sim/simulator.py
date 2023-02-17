@@ -84,9 +84,9 @@ class Simulator:
         finished_simulation = True
         for agent in self.agents:
             agent.state.action_time += self.control.delta
-            finished_simulation &= agent.state.is_done
+            finished_simulation &= agent.state.flags.is_done
 
-            if not (agent.state.is_done or agent.state.out_of_charge):
+            if not (agent.state.flags.is_done or agent.state.flags.out_of_charge):
                 self._update_agent(agent)
         self.control.should_close |= finished_simulation
 
@@ -109,9 +109,9 @@ class Simulator:
         self._check_next_action(agent, vertex)
 
     def _do_action(self, agent, vertex, action):
-        if agent.state.is_travelling[0]:
+        if agent.state.flags.is_travelling[0]:
             # It is travelling to a vertex
-            _, origin, target = agent.state.is_travelling
+            _, origin, target = agent.state.flags.is_travelling
             edge = self.graph.get_edge(origin, target)
             travel_time = edge.time
             completion = (
@@ -126,28 +126,28 @@ class Simulator:
                 100 * completion,
             )
             if agent.state.action_time > travel_time:
-                agent.state.is_travelling = (False, None, None)
-                agent.state.just_arrived = True
+                agent.state.flags.is_travelling = (False, None, None)
+                agent.state.flags.just_arrived = True
                 agent.state.action_time = 0
                 agent.insert_energy(-edge.weight, self.params.battery_eff)
 
-        if not agent.state.is_travelling[0]:
+        if not agent.state.flags.is_travelling[0]:
             # It is doing some action
-            if agent.state.just_arrived:
+            if agent.state.flags.just_arrived:
                 vertex.members.add(agent)
-                agent.state.is_waiting = True
-                agent.state.just_arrived = False
+                agent.state.flags.is_waiting = True
+                agent.state.flags.just_arrived = False
 
-            if agent.state.is_waiting:
+            if agent.state.flags.is_waiting:
                 LOGGER.debug(
                     "(%s|%i) waiting in %s", agent, agent.state.current_action, vertex
                 )
-                agent.state.is_waiting = vertex.capacity < len(vertex.members)
-                if not agent.state.is_waiting:
+                agent.state.flags.is_waiting = vertex.capacity < len(vertex.members)
+                if not agent.state.flags.is_waiting:
                     # This would happen when the agent stops waiting and acts
                     agent.state.action_time = 0
 
-            if not agent.state.is_waiting:
+            if not agent.state.flags.is_waiting:
                 time, energy = action.act(agent, vertex)
                 completion = agent.state.action_time / time if time != 0 else 1
                 LOGGER.debug(
@@ -160,20 +160,20 @@ class Simulator:
                 )
                 if agent.state.action_time > time:
                     vertex.members.discard(agent)
-                    agent.state.finished_action = True
+                    agent.state.flags.finished_action = True
                     agent.insert_energy(energy, self.params.battery_eff)
 
     def _check_next_action(self, agent, vertex):
-        if agent.state.finished_action:
+        if agent.state.flags.finished_action:
             # Send the agent to sleep if there are no more actions left
             if agent.state.current_action + 1 >= len(agent.actions):
                 LOGGER.info("Agent %s finished", agent)
-                agent.state.is_done = True
+                agent.state.flags.is_done = True
                 agent.state.action_time = 0
             else:
                 next_vertex, _ = agent.actions[agent.state.current_action + 1].tuple()
                 if next_vertex is not vertex:
-                    agent.state.is_travelling = (True, vertex, next_vertex)
+                    agent.state.flags.is_travelling = (True, vertex, next_vertex)
                     agent.state.action_time = 0
                 agent.state.current_action += 1
-                agent.state.finished_action = False
+                agent.state.flags.finished_action = False
