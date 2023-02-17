@@ -11,4 +11,5 @@ from .edge import Edge
 from .graph import Graph, draw_graph
 from .state import AgentState
 from .types import *
+from .uncertainty import *
 from .vertex import Vertex
