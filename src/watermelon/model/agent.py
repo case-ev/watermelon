@@ -81,4 +81,6 @@ class Agent(metaclass=AgentMetaClass):
 
     def insert_energy(self, energy_delta, battery_efficiency=BATTERY_EFFICIENCY):
         """Insert/remove a given amount of energy from the battery"""
-        self.state.true_soc += energy_delta / (battery_efficiency * self.battery_capacity)
+        self.state.true_soc += energy_delta / (
+            battery_efficiency * self.battery_capacity
+        )
