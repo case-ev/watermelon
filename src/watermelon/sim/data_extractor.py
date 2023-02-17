@@ -23,23 +23,23 @@ class DataElement:
 
     def __str__(self):
         soc_str = f"{100 * self.state.soc:.1f}"
-
         if self.state.is_travelling[0]:
             vertex_str = (
                 f"({str(self.prev_decision.vertex)}->{str(self.decision.vertex)})"
             )
         else:
             vertex_str = f"{str(self.decision)}"
-        result = f"{soc_str}% @ {vertex_str}, {self.state.action_time:.2f}min"
+        time_str = f"{self.state.action_time:.2f}"
 
+        result = f"{soc_str}% @ {vertex_str}, {time_str}min"
         if self.state.is_done:
-            result = f"FINISHED, {self.state.action_time:.2f}min"
+            result = f"FINISHED, {time_str}min"
         if self.state.is_waiting:
             result = (
-                f"WAITING, {soc_str}% @ {vertex_str}, {self.state.action_time:.2f}min"
+                f"WAITING, {soc_str}% @ {vertex_str}, {time_str}min"
             )
         if self.state.out_of_charge:
-            result = f"OOC @ {vertex_str}, {self.state.action_time:.2f}min"
+            result = f"OOC @ {vertex_str}, {time_str}min"
 
         if self.state.overcharged:
             result += "[O]"
