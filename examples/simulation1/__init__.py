@@ -194,4 +194,4 @@ def main(delta=1, stop_time=180, show=False):
 
     LOGGER.info("Finished simulation, showing results")
     print(sim.data_extractor.data)
-    sim.data_extractor.data.to_csv("examples/simulation1/results/result.csv")
+    sim.data_extractor.data.to_csv("examples/simulation1/results/result.csv", index=False)
