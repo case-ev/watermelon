@@ -4,7 +4,10 @@ watermelon.model.vertex
 Definition of a vertex in the graph.
 """
 
-from watermelon.model.types import EmptyVertexType
+import dataclasses
+
+from watermelon.model.actions import VertexAction
+from watermelon.model.types import EmptyVertexType, VertexType
 
 
 class VertexMetaClass(type):
@@ -12,7 +15,7 @@ class VertexMetaClass(type):
 
     _instances = {}
 
-    def __call__(cls, identifier, *args, **kwargs):
+    def __call__(cls, identifier: object, *args, **kwargs):
         id_hash = hash(identifier)
         if id_hash not in cls._instances:
             instance = super().__call__(identifier, *args, **kwargs)
@@ -27,35 +30,50 @@ class Vertex(metaclass=VertexMetaClass):
     then it is assumed to be an empty vertex
     """
 
-    def __init__(self, identifier, capacity=None, vertex_type=EmptyVertexType()):
+    def __init__(self, identifier: object, capacity: int = None, vertex_type: VertexType = EmptyVertexType()) -> None:
         self._id = identifier
         self._id_hash = hash(identifier)
         self.type = vertex_type
         self.members = set()
         self.capacity = float("inf") if capacity is None else capacity
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return self.hash
 
-    def __eq__(self, __o):
+    def __eq__(self, __o: object) -> bool:
         return (
             hash(self) == hash(__o)
             and self.type == __o.type
             and isinstance(__o, self.__class__)
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Vertex(identifier={repr(self.id)}, vertex_type={repr(self.type)})"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{str(self.type)}({str(self.id)})"
 
     @property
-    def id(self):
+    def id(self) -> object:
         """Unique ID of the vertex"""
         return self._id
 
     @property
-    def hash(self):
+    def hash(self) -> int:
         """Hash of the unique ID of the vertex"""
         return self._id_hash
+
+
+@dataclasses.dataclass
+class Decision:
+    """Decision containing an action and a tuple"""
+
+    vertex: Vertex
+    action: VertexAction
+
+    def __str__(self) -> str:
+        return f"({str(self.vertex)}, {str(self.action)})"
+
+    def tuple(self) -> tuple:
+        """Parse into a tuple"""
+        return self.vertex, self.action

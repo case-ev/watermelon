@@ -10,7 +10,7 @@ import dataclasses
 import pandas as pd
 
 from watermelon.model.state import AgentState
-from watermelon.model.actions import Decision
+from watermelon.model.vertex import Decision
 
 
 @dataclasses.dataclass

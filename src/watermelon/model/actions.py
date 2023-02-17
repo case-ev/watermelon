@@ -5,7 +5,6 @@ Types of actions that the agents can take
 """
 
 import abc
-import dataclasses
 
 from watermelon_common.logger import LOGGER
 from watermelon.defaults import BATTERY_EFFICIENCY, LEAKAGE_POWER
@@ -13,21 +12,6 @@ from watermelon.exceptions import ForbiddenActionException
 
 
 _MINUTES_PER_HOUR = 60
-
-
-@dataclasses.dataclass
-class Decision:
-    """Decision containing an action and a tuple"""
-
-    vertex: "Vertex"
-    action: "VertexAction"
-
-    def __str__(self):
-        return f"({str(self.vertex)}, {str(self.action)})"
-
-    def tuple(self):
-        """Parse into a tuple"""
-        return self.vertex, self.action
 
 
 class VertexAction(abc.ABC):
