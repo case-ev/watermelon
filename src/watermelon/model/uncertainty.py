@@ -22,6 +22,20 @@ class UncertaintySource(abc.ABC):
         """Get a sample of the distribution"""
 
 
+class NoUncertainty(UncertaintySource):
+    """Model for a deterministic output"""
+
+    def __init__(self):
+        self._last_sample = 0
+
+    @property
+    def last(self):
+        return self._last_sample
+
+    def sample(self):
+        return 0
+
+
 class GaussianUncertainty(UncertaintySource):
     """Model for gaussian uncertainty"""
 
