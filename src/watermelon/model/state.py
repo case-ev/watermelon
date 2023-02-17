@@ -4,7 +4,7 @@ watermelon.model.state
 Functionality for the state of the agent
 """
 
-from typing import Tuple
+from typing import Tuple, Self
 import dataclasses
 
 from watermelon.model.actions import VertexAction
@@ -30,14 +30,14 @@ class AgentState:
     overcharged: bool = False
 
     @property
-    def soc(self):
+    def soc(self) -> float:
         """True state of charge. In reality this would be unobtainable, but it
         is left as available for simulation purposes.
         """
         return self._soc
 
     @soc.setter
-    def soc(self, val):
+    def soc(self, val: float) -> None:
         self._soc = val
         if self._soc <= 0:
             self._soc = 0
@@ -48,6 +48,6 @@ class AgentState:
             self.out_of_charge = False
             self.overcharged = False
 
-    def copy(self):
+    def copy(self) -> Self:
         """Create a copy of itself"""
         return dataclasses.replace(self)
