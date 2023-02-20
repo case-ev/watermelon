@@ -8,10 +8,10 @@ from typing import Hashable, List
 
 import numpy as np
 
-from watermelon.model.actions import VertexAction
 from watermelon.model.graph import Graph
 from watermelon.model.state import AgentState
 from watermelon.model.uncertainty import NoUncertainty, UncertaintySource
+from watermelon.model.vertex import Decision
 from watermelon.defaults import BATTERY_CAPACITY, MATERIAL_CAPACITY, BATTERY_EFFICIENCY
 
 
@@ -35,7 +35,7 @@ class Agent(metaclass=AgentMetaClass):
         self,
         identifier: Hashable,
         graph: Graph = None,
-        actions: List[VertexAction] = None,
+        actions: List[Decision] = None,
         *,
         uncertainty: UncertaintySource = None,
         initial_state: AgentState = None,
@@ -49,9 +49,6 @@ class Agent(metaclass=AgentMetaClass):
         self.material_capacity = material_capacity
         self.uncertainty = NoUncertainty() if uncertainty is None else uncertainty
         self.state = AgentState() if initial_state is None else initial_state
-
-        # Each element in `actions` is a 2-tuple of a vertex
-        # and an action.
         self.actions = [] if actions is None else actions
 
     def __hash__(self) -> None:
