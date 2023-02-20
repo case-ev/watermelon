@@ -201,7 +201,9 @@ class Graph:
         return draw_graph(self, axis, pos_fn, **kwargs)
 
 
-def draw_graph(graph: Graph, axis: plt.Axes = None, pos_fn: Callable = None, **kwargs) -> None:
+def draw_graph(
+    graph: Graph, axis: plt.Axes = None, pos_fn: Callable = None, **kwargs
+) -> None:
     """Draw a graph using matplotlib
 
     It takes the graph, turns it into the convention used by networkx by taking the

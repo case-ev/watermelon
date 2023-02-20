@@ -35,9 +35,7 @@ class DataElement:
         if self.state.is_done:
             result = f"FINISHED, {time_str}min"
         if self.state.is_waiting:
-            result = (
-                f"WAITING, {soc_str}% @ {vertex_str}, {time_str}min"
-            )
+            result = f"WAITING, {soc_str}% @ {vertex_str}, {time_str}min"
         if self.state.out_of_charge:
             result = f"OOC @ {vertex_str}, {time_str}min"
 

@@ -10,7 +10,9 @@ from watermelon.model.vertex import Vertex
 class Edge:
     """Edge connecting two vertices"""
 
-    def __init__(self, origin: Vertex, target: Vertex, weight: float = None, time: float = None) -> None:
+    def __init__(
+        self, origin: Vertex, target: Vertex, weight: float = None, time: float = None
+    ) -> None:
         self.origin = origin
         self.target = target
         self.weight = weight
@@ -32,4 +34,5 @@ class Edge:
 weight={repr(self.weight)}, time={repr(self.time)})"
 
     def __str__(self) -> str:
-        return f"({str(self.origin)}->{str(self.target)}; w={str(self.weight)}, t={str(self.time)})"
+        return f"({str(self.origin)}->{str(self.target)}; w={str(self.weight)}, \
+t={str(self.time)})"

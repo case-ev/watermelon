@@ -97,9 +97,7 @@ class ChargeBatteryAction(VertexAction):
     def _act(self, agent, vertex):
         if agent.soc >= self.limit:
             return 0, 0
-        energy = (
-            (self.limit - agent.soc) * self.battery_eff * agent.battery_capacity
-        )
+        energy = (self.limit - agent.soc) * self.battery_eff * agent.battery_capacity
         time = _MINUTES_PER_HOUR * energy / vertex.type.charge_power
         LOGGER.info(
             "%s charging %.0f Wh (%.0f minutes) at %s", agent, energy, time, vertex
@@ -314,7 +312,9 @@ class Vertex(metaclass=VertexMetaClass):
     then it is assumed to be an empty vertex
     """
 
-    def __init__(self, identifier: object, capacity: int = None, vertex_type: VertexType = None) -> None:
+    def __init__(
+        self, identifier: object, capacity: int = None, vertex_type: VertexType = None
+    ) -> None:
         self._id = identifier
         self._id_hash = hash(identifier)
         self.type = EmptyVertexType() if vertex_type is None else vertex_type
