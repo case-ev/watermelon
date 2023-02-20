@@ -7,8 +7,7 @@ Functionality for the state of the agent
 from typing import Tuple, Self
 import dataclasses
 
-from watermelon.model.actions import VertexAction
-from watermelon.model.vertex import Vertex
+from watermelon.model.vertex import Vertex, VertexAction
 
 
 @dataclasses.dataclass

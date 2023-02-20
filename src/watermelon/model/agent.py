@@ -8,10 +8,10 @@ from typing import Hashable, List
 
 import numpy as np
 
-from watermelon.model.decision import Decision
 from watermelon.model.graph import Graph
 from watermelon.model.state import AgentState
 from watermelon.model.uncertainty import NoUncertainty, UncertaintySource
+from watermelon.model.vertex import Decision
 from watermelon.defaults import BATTERY_CAPACITY, MATERIAL_CAPACITY, BATTERY_EFFICIENCY
 
 
