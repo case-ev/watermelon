@@ -11,7 +11,7 @@ An agent is modelled by the `Agent` class, which contains:
 - A state variable which represents the state of said agent at that moment. This is modelled by the `AgentState` data structure.
 - A battery capacity in Wh, which indicates how much energy the battery holds.
 - A material capacity in kg, which indicates how heavy of a payload the agent can carry.
-- A model of the uncertainty involved in SOC estimation. The different models available and their functionality is specified in another document.
+- A model of the uncertainty involved in SOC estimation. The different models available and their functionality are specified in [Uncertainty models](soc.md#uncertainty-models).
 
 The state corresponds to a dataclass which contains information about the current state of the agent. This information corresponds to the current vertex and action, the state of charge of the battery, the current payload, as well as status flags (is the agent finished, is it waiting, is it travelling, etc.). The following are all the attributes contained in the `AgentState` class:
 
