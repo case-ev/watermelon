@@ -34,5 +34,5 @@ for file in *; do
     fi
 done
 
-echo -e "Removing temp directory"
+echo -e "Cleaning up"
 rm -rf "${BUILD_DIR}/temp/"
