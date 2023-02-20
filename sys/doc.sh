@@ -36,3 +36,5 @@ done
 
 echo -e "Cleaning up"
 rm -rf "${BUILD_DIR}/temp/"
+
+echo -e "\x1b[32;20mSuccesfully built documentation\x1b[0m"
