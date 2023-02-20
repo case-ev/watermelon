@@ -4,9 +4,6 @@ watermelon.model.vertex
 Definition of a vertex in the graph.
 """
 
-import dataclasses
-
-from watermelon.model.actions import VertexAction
 from watermelon.model.types import EmptyVertexType, VertexType
 
 
@@ -30,10 +27,10 @@ class Vertex(metaclass=VertexMetaClass):
     then it is assumed to be an empty vertex
     """
 
-    def __init__(self, identifier: object, capacity: int = None, vertex_type: VertexType = EmptyVertexType()) -> None:
+    def __init__(self, identifier: object, capacity: int = None, vertex_type: VertexType = None) -> None:
         self._id = identifier
         self._id_hash = hash(identifier)
-        self.type = vertex_type
+        self.type = EmptyVertexType() if vertex_type is None else vertex_type
         self.members = set()
         self.capacity = float("inf") if capacity is None else capacity
 
@@ -62,18 +59,3 @@ class Vertex(metaclass=VertexMetaClass):
     def hash(self) -> int:
         """Hash of the unique ID of the vertex"""
         return self._id_hash
-
-
-@dataclasses.dataclass
-class Decision:
-    """Decision containing an action and a tuple"""
-
-    vertex: Vertex
-    action: VertexAction
-
-    def __str__(self) -> str:
-        return f"({str(self.vertex)}, {str(self.action)})"
-
-    def tuple(self) -> tuple:
-        """Parse into a tuple"""
-        return self.vertex, self.action
