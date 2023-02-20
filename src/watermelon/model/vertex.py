@@ -7,6 +7,7 @@ the possible actions you can take in them.
 
 import abc
 import dataclasses
+from typing import Tuple
 
 from watermelon_common.logger import LOGGER
 from watermelon.defaults import BATTERY_EFFICIENCY, LEAKAGE_POWER
@@ -17,205 +18,7 @@ _MINUTES_PER_HOUR = 60
 
 
 ###############################################################################
-# |=============================| Actions |===================================|#
-###############################################################################
-
-
-class VertexAction(abc.ABC):
-    """Type of action"""
-
-    @staticmethod
-    @abc.abstractmethod
-    def _char():
-        """Unique character that represents an action"""
-
-    @abc.abstractmethod
-    def _act(self, agent, vertex):
-        """Take an action in a vertex"""
-
-    def act(self, agent, vertex):
-        """Make an agent take this action on a vertex.
-
-        This method returns both the time it takes to do the action and
-        the amount of energy required to do it.
-
-        Parameters
-        ----------
-        agent : watermelon.model.Agent
-            Agent that takes the action
-        vertex : watermelon.model.Vertex
-            Vertex to add to the graph
-
-        Returns
-        -------
-        time, energy : (float, float)
-            Amount of time and energy that it takes to do the action
-        """
-        if self.__class__ not in vertex.type.ACTIONS:
-            raise ForbiddenActionException(self, vertex.type)
-        return self._act(agent, vertex)
-
-    @classmethod
-    def __repr__(cls):
-        return cls.__class__.__name__
-
-    @classmethod
-    def __str__(cls):
-        return cls._char()
-
-
-class NullAction(VertexAction):
-    """Action for not doing anything"""
-
-    @staticmethod
-    def _char():
-        return "\u03d5"  # phi
-
-    def _act(self, agent, vertex):
-        return 0, 0
-
-
-class ChargeBatteryAction(VertexAction):
-    """Action for charging the battery"""
-
-    def __init__(self, limit=0.8, battery_eff=BATTERY_EFFICIENCY):
-        """Charge the battery.
-
-        The specified battery efficiency indicates which percentage of
-        the energy given by the battery is used as mechanical work to
-        travel the graph.
-
-        Parameters
-        ----------
-        limit : float, optional
-            State of charged to be reached, by default 0.8
-        battery_eff : float, optional
-            Efficiency of the battery, by default BATTERY_EFFICIENCY
-        """
-        self.limit = limit
-        self.battery_eff = battery_eff
-
-    @staticmethod
-    def _char():
-        return "c"
-
-    def _act(self, agent, vertex):
-        if agent.soc >= self.limit:
-            return 0, 0
-        energy = (self.limit - agent.soc) * self.battery_eff * agent.battery_capacity
-        time = _MINUTES_PER_HOUR * energy / vertex.type.charge_power
-        LOGGER.info(
-            "%s charging %.0f Wh (%.0f minutes) at %s", agent, energy, time, vertex
-        )
-        return time, energy
-
-
-class WaitAction(VertexAction):
-    """Action for waiting"""
-
-    def __init__(self, time=0):
-        """Wait for the given amount of time"""
-        self.time = time
-
-    @staticmethod
-    def _char():
-        return "w"
-
-    def _act(self, agent, vertex):
-        energy = LEAKAGE_POWER * self.time / _MINUTES_PER_HOUR
-        return self.time, -energy
-
-
-class LoadMaterialAction(VertexAction):
-    """Action for loading material"""
-
-    def __init__(self, limit=1, material=None):
-        """Make the agent load material.
-
-        Parameters
-        ----------
-        limit : float, 0 <= limit <= 1, optional
-            Payload limit as a proportion, by default 1
-        material : float, optional
-            Amount of material to be loaded in kg, by default None. If
-            it is specified, it overrides the value given by limit.
-        """
-        self.limit = limit
-        self.material = material
-
-    @staticmethod
-    def _char():
-        return "x"
-
-    def _act(self, agent, vertex):
-        if agent.state.payload >= self.limit:
-            return 0, 0
-        if self.material is None:
-            material = (self.limit - agent.state.payload) * agent.material_capacity
-        else:
-            material = self.material
-        time = material / vertex.type.load_rate
-
-        leakage_energy = LEAKAGE_POWER * time / _MINUTES_PER_HOUR
-        action_energy = 0
-        energy = leakage_energy + action_energy
-        LOGGER.info(
-            "%s Loading %.0f kg (%.0f Wh, %.0f minutes) at %s",
-            agent,
-            material,
-            energy,
-            time,
-            vertex,
-        )
-        return time, -energy
-
-
-class DischargeMaterialAction(VertexAction):
-    """Action for discharging material"""
-
-    def __init__(self, limit=0, material=None):
-        """Make the agent discharge material.
-
-        Parameters
-        ----------
-        limit : float, 0 <= limit <= 1, optional
-            Payload limit as a proportion, by default 1
-        material : float, optional
-            Amount of material to be discharged in kg, by default None. If
-            it is specified, it overrides the value given by limit.
-        """
-        self.limit = limit
-        self.material = material
-
-    @staticmethod
-    def _char():
-        return "o"
-
-    def _act(self, agent, vertex):
-        if agent.state.payload <= self.limit:
-            return 0, 0
-        if self.material is None:
-            material = (agent.state.payload - self.limit) * agent.material_capacity
-        else:
-            material = self.material
-        time = material / vertex.type.load_rate
-
-        leakage_energy = LEAKAGE_POWER * time / _MINUTES_PER_HOUR
-        action_energy = 0
-        energy = leakage_energy + action_energy
-        LOGGER.info(
-            "%s Discharging %.0f kg (%.0f Wh, %.0f minutes) at %s",
-            agent,
-            material,
-            energy,
-            time,
-            vertex,
-        )
-        return time, -energy
-
-
-###############################################################################
-# |==============================| Types |====================================|#
+# |==============================| Core |===================================| #
 ###############################################################################
 
 
@@ -236,75 +39,6 @@ class VertexType(abc.ABC):
     @classmethod
     def __str__(cls) -> str:
         return cls._char()
-
-
-class EmptyVertexType(VertexType):
-    """Empty node"""
-
-    ACTIONS = [NullAction, WaitAction]
-
-    @staticmethod
-    def _char() -> str:
-        return "\u03b8"  # theta
-
-
-class EVChargerType(VertexType):
-    """Charger for electric vehicles"""
-
-    ACTIONS = [ChargeBatteryAction, NullAction, WaitAction]
-
-    def __init__(self, charge_power) -> None:
-        self._charge_power = charge_power
-
-    @staticmethod
-    def _char() -> str:
-        return "C"
-
-    @property
-    def charge_power(self) -> float:
-        """Power with which the EV charges"""
-        return self._charge_power
-
-
-class MaterialLoadType(VertexType):
-    """Load material"""
-
-    ACTIONS = [LoadMaterialAction, NullAction, WaitAction]
-
-    def __init__(self, load_rate) -> None:
-        self._load_rate = load_rate
-
-    @staticmethod
-    def _char() -> str:
-        return "X"
-
-    @property
-    def load_rate(self) -> float:
-        """Rate in kg/minute at which material is loaded"""
-        return self._load_rate
-
-
-class MaterialDischargeType(VertexType):
-    """Discharge material"""
-
-    ACTIONS = [DischargeMaterialAction, NullAction, WaitAction]
-
-    def __init__(self, discharge_rate) -> None:
-        self._discharge_rate = discharge_rate
-
-    @staticmethod
-    def _char() -> str:
-        return "O"
-
-    @property
-    def discharge_rate(self) -> float:
-        """Rate in kg/minute at which material is discharged"""
-        return self._discharge_rate
-
-
-###############################################################################
-# |==============================| Vertex |===================================|#
-###############################################################################
 
 
 class VertexMetaClass(type):
@@ -363,6 +97,49 @@ class Vertex(metaclass=VertexMetaClass):
         return self._id_hash
 
 
+class VertexAction(abc.ABC):
+    """Type of action"""
+
+    @staticmethod
+    @abc.abstractmethod
+    def _char() -> str:
+        """Unique character that represents an action"""
+
+    @abc.abstractmethod
+    def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
+        """Take an action in a vertex"""
+
+    def act(self, agent, vertex: Vertex) -> Tuple[float, float]:
+        """Make an agent take this action on a vertex.
+
+        This method returns both the time it takes to do the action and
+        the amount of energy required to do it.
+
+        Parameters
+        ----------
+        agent : watermelon.model.Agent
+            Agent that takes the action
+        vertex : watermelon.model.Vertex
+            Vertex to add to the graph
+
+        Returns
+        -------
+        time, energy : (float, float)
+            Amount of time and energy that it takes to do the action
+        """
+        if self.__class__ not in vertex.type.ACTIONS:
+            raise ForbiddenActionException(self, vertex.type)
+        return self._act(agent, vertex)
+
+    @classmethod
+    def __repr__(cls) -> str:
+        return cls.__class__.__name__
+
+    @classmethod
+    def __str__(cls) -> str:
+        return cls._char()
+
+
 @dataclasses.dataclass
 class Decision:
     """Decision containing an action and a tuple"""
@@ -373,6 +150,232 @@ class Decision:
     def __str__(self) -> str:
         return f"({str(self.vertex)}, {str(self.action)})"
 
-    def tuple(self) -> tuple:
-        """Parse into a tuple"""
+    def tuple(self) -> Tuple[Vertex, VertexAction]:
+        """Parse into a tuple (vertex, action)"""
         return self.vertex, self.action
+
+
+###############################################################################
+# |=============================| Actions |=================================| #
+###############################################################################
+
+
+class NullAction(VertexAction):
+    """Action for not doing anything"""
+
+    @staticmethod
+    def _char() -> str:
+        return "\u03d5"  # phi
+
+    def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
+        return 0, 0
+
+
+class ChargeBatteryAction(VertexAction):
+    """Action for charging the battery"""
+
+    def __init__(
+        self, limit: float = 0.8, battery_eff: float = BATTERY_EFFICIENCY
+    ) -> None:
+        """Charge the battery.
+
+        The specified battery efficiency indicates which percentage of
+        the energy given by the battery is used as mechanical work to
+        travel the graph.
+
+        Parameters
+        ----------
+        limit : float, optional
+            State of charged to be reached, by default 0.8
+        battery_eff : float, optional
+            Efficiency of the battery, by default BATTERY_EFFICIENCY
+        """
+        self.limit = limit
+        self.battery_eff = battery_eff
+
+    @staticmethod
+    def _char() -> str:
+        return "c"
+
+    def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
+        if agent.soc >= self.limit:
+            return 0, 0
+        energy = (self.limit - agent.soc) * self.battery_eff * agent.battery_capacity
+        time = _MINUTES_PER_HOUR * energy / vertex.type.charge_power
+        LOGGER.info(
+            "%s charging %.0f Wh (%.0f minutes) at %s", agent, energy, time, vertex
+        )
+        return time, energy
+
+
+class WaitAction(VertexAction):
+    """Action for waiting"""
+
+    def __init__(self, time: float = 0) -> None:
+        """Wait for the given amount of time"""
+        self.time = time
+
+    @staticmethod
+    def _char() -> str:
+        return "w"
+
+    def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
+        energy = LEAKAGE_POWER * self.time / _MINUTES_PER_HOUR
+        return self.time, -energy
+
+
+class LoadMaterialAction(VertexAction):
+    """Action for loading material"""
+
+    def __init__(self, limit: float = 1, material: float = None) -> None:
+        """Make the agent load material.
+
+        Parameters
+        ----------
+        limit : float, 0 <= limit <= 1, optional
+            Payload limit as a proportion, by default 1
+        material : float, optional
+            Amount of material to be loaded in kg, by default None. If
+            it is specified, it overrides the value given by limit.
+        """
+        self.limit = limit
+        self.material = material
+
+    @staticmethod
+    def _char() -> str:
+        return "x"
+
+    def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
+        if agent.state.payload >= self.limit:
+            return 0, 0
+        if self.material is None:
+            material = (self.limit - agent.state.payload) * agent.material_capacity
+        else:
+            material = self.material
+        time = material / vertex.type.load_rate
+
+        leakage_energy = LEAKAGE_POWER * time / _MINUTES_PER_HOUR
+        action_energy = 0
+        energy = leakage_energy + action_energy
+        LOGGER.info(
+            "%s Loading %.0f kg (%.0f Wh, %.0f minutes) at %s",
+            agent,
+            material,
+            energy,
+            time,
+            vertex,
+        )
+        return time, -energy
+
+
+class DischargeMaterialAction(VertexAction):
+    """Action for discharging material"""
+
+    def __init__(self, limit: float = 0, material: float = None) -> None:
+        """Make the agent discharge material.
+
+        Parameters
+        ----------
+        limit : float, 0 <= limit <= 1, optional
+            Payload limit as a proportion, by default 1
+        material : float, optional
+            Amount of material to be discharged in kg, by default None. If
+            it is specified, it overrides the value given by limit.
+        """
+        self.limit = limit
+        self.material = material
+
+    @staticmethod
+    def _char() -> str:
+        return "o"
+
+    def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
+        if agent.state.payload <= self.limit:
+            return 0, 0
+        if self.material is None:
+            material = (agent.state.payload - self.limit) * agent.material_capacity
+        else:
+            material = self.material
+        time = material / vertex.type.load_rate
+
+        leakage_energy = LEAKAGE_POWER * time / _MINUTES_PER_HOUR
+        action_energy = 0
+        energy = leakage_energy + action_energy
+        LOGGER.info(
+            "%s Discharging %.0f kg (%.0f Wh, %.0f minutes) at %s",
+            agent,
+            material,
+            energy,
+            time,
+            vertex,
+        )
+        return time, -energy
+
+
+###############################################################################
+# |=============================| Types |===================================| #
+###############################################################################
+
+
+class EmptyVertexType(VertexType):
+    """Empty node"""
+
+    ACTIONS = [NullAction, WaitAction]
+
+    @staticmethod
+    def _char() -> str:
+        return "\u03b8"  # theta
+
+
+class EVChargerType(VertexType):
+    """Charger for electric vehicles"""
+
+    ACTIONS = [ChargeBatteryAction, NullAction, WaitAction]
+
+    def __init__(self, charge_power: float) -> None:
+        self._charge_power = charge_power
+
+    @staticmethod
+    def _char() -> str:
+        return "C"
+
+    @property
+    def charge_power(self) -> float:
+        """Power with which the EV charges"""
+        return self._charge_power
+
+
+class MaterialLoadType(VertexType):
+    """Load material"""
+
+    ACTIONS = [LoadMaterialAction, NullAction, WaitAction]
+
+    def __init__(self, load_rate: float) -> None:
+        self._load_rate = load_rate
+
+    @staticmethod
+    def _char() -> str:
+        return "X"
+
+    @property
+    def load_rate(self) -> float:
+        """Rate in kg/minute at which material is loaded"""
+        return self._load_rate
+
+
+class MaterialDischargeType(VertexType):
+    """Discharge material"""
+
+    ACTIONS = [DischargeMaterialAction, NullAction, WaitAction]
+
+    def __init__(self, discharge_rate: float) -> None:
+        self._discharge_rate = discharge_rate
+
+    @staticmethod
+    def _char() -> str:
+        return "O"
+
+    @property
+    def discharge_rate(self) -> float:
+        """Rate in kg/minute at which material is discharged"""
+        return self._discharge_rate
