@@ -1,0 +1,3 @@
+[submodule "docs/pandoc-toc-sidebar"]
+	path = docs/pandoc-toc-sidebar
+	url = https://github.com/Mushiyo/pandoc-toc-sidebar
