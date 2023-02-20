@@ -9,7 +9,7 @@ Each vertex and each action have a unique symbol associated to them, mostly for 
 
 The currently implemented vertex types are:
 
-- `EmptyVertexType` (θ): Vertex that is not of a specific type, but rather a "structural" member.
+- `EmptyVertexType` (Θ): Vertex that is not of a specific type, but rather a "structural" member.
 - `EVChargerType` (C): Charger for an electric vehicle.
 - `MaterialLoadType` (X): Point where material is loaded.
 - `MaterialDischargeType` (O): Point where material is depositted.

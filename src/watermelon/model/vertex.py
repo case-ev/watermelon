@@ -324,7 +324,7 @@ class EmptyVertexType(VertexType):
 
     @staticmethod
     def char() -> str:
-        return "\u03b8"  # theta
+        return "\u0398"  # theta
 
 
 class EVChargerType(VertexType):
