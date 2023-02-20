@@ -30,7 +30,7 @@ for file in *; do
         filename="${file%.md}"
         title=`cat "$file" | head -n 1`
         cat "$file" | tail -n +2 > "${BUILD_DIR}/temp/${filename}.md"
-        pandoc -f markdown -t $target "${BUILD_DIR}/temp/${filename}.md" -o "${BUILD_DIR}/${filename}.${target}" --css=styles/main.css --embed-resources --standalone --metadata title="$title"
+        pandoc -f markdown -t $target "${BUILD_DIR}/temp/${filename}.md" -o "${BUILD_DIR}/${filename}.${target}" --lua-filter lua/link_files.lua --css=styles/main.css --embed-resources --standalone --metadata title="$title"
     fi
 done
 
