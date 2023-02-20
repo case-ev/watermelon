@@ -30,4 +30,4 @@ Once you have it installed, run
 ```bash
 sys/doc.sh
 ```
-which will build the documentation and do any pre/post-processing that might be necessary.
+which will build the documentation and do any pre/post-processing that might be necessary. You can also run `sys/doc.sh -s`, which will start a localhost server and allow you to view the documentation in your browser.
