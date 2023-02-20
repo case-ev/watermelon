@@ -25,11 +25,6 @@ _MINUTES_PER_HOUR = 60
 class VertexType(abc.ABC):
     """Base interface for a node type"""
 
-    @staticmethod
-    @abc.abstractmethod
-    def _char() -> str:
-        pass
-
     def __repr__(self) -> str:
         return self.__class__.__name__
 
@@ -38,7 +33,12 @@ class VertexType(abc.ABC):
 
     @classmethod
     def __str__(cls) -> str:
-        return cls._char()
+        return cls.char()
+
+    @staticmethod
+    @abc.abstractmethod
+    def char() -> str:
+        """Get the identifying character"""
 
 
 class VertexMetaClass(type):
@@ -100,10 +100,13 @@ class Vertex(metaclass=VertexMetaClass):
 class VertexAction(abc.ABC):
     """Type of action"""
 
-    @staticmethod
-    @abc.abstractmethod
-    def _char() -> str:
-        """Unique character that represents an action"""
+    @classmethod
+    def __repr__(cls) -> str:
+        return cls.__class__.__name__
+
+    @classmethod
+    def __str__(cls) -> str:
+        return cls.char()
 
     @abc.abstractmethod
     def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
@@ -131,13 +134,10 @@ class VertexAction(abc.ABC):
             raise ForbiddenActionException(self, vertex.type)
         return self._act(agent, vertex)
 
-    @classmethod
-    def __repr__(cls) -> str:
-        return cls.__class__.__name__
-
-    @classmethod
-    def __str__(cls) -> str:
-        return cls._char()
+    @staticmethod
+    @abc.abstractmethod
+    def char() -> str:
+        """Unique character that represents an action"""
 
 
 @dataclasses.dataclass
@@ -164,7 +164,7 @@ class NullAction(VertexAction):
     """Action for not doing anything"""
 
     @staticmethod
-    def _char() -> str:
+    def char() -> str:
         return "\u03d5"  # phi
 
     def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
@@ -194,7 +194,7 @@ class ChargeBatteryAction(VertexAction):
         self.battery_eff = battery_eff
 
     @staticmethod
-    def _char() -> str:
+    def char() -> str:
         return "c"
 
     def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
@@ -216,7 +216,7 @@ class WaitAction(VertexAction):
         self.time = time
 
     @staticmethod
-    def _char() -> str:
+    def char() -> str:
         return "w"
 
     def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
@@ -242,7 +242,7 @@ class LoadMaterialAction(VertexAction):
         self.material = material
 
     @staticmethod
-    def _char() -> str:
+    def char() -> str:
         return "x"
 
     def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
@@ -286,7 +286,7 @@ class DischargeMaterialAction(VertexAction):
         self.material = material
 
     @staticmethod
-    def _char() -> str:
+    def char() -> str:
         return "o"
 
     def _act(self, agent, vertex: Vertex) -> Tuple[float, float]:
@@ -323,7 +323,7 @@ class EmptyVertexType(VertexType):
     ACTIONS = [NullAction, WaitAction]
 
     @staticmethod
-    def _char() -> str:
+    def char() -> str:
         return "\u03b8"  # theta
 
 
@@ -336,7 +336,7 @@ class EVChargerType(VertexType):
         self._charge_power = charge_power
 
     @staticmethod
-    def _char() -> str:
+    def char() -> str:
         return "C"
 
     @property
@@ -354,7 +354,7 @@ class MaterialLoadType(VertexType):
         self._load_rate = load_rate
 
     @staticmethod
-    def _char() -> str:
+    def char() -> str:
         return "X"
 
     @property
@@ -372,7 +372,7 @@ class MaterialDischargeType(VertexType):
         self._discharge_rate = discharge_rate
 
     @staticmethod
-    def _char() -> str:
+    def char() -> str:
         return "O"
 
     @property
