@@ -9,8 +9,7 @@ import abc
 import dataclasses
 import pandas as pd
 
-from watermelon.model.state import AgentState
-from watermelon.model.vertex import Decision
+from watermelon.model.agent import AgentState, Decision
 
 
 @dataclasses.dataclass
