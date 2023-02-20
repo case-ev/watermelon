@@ -1,6 +1,4 @@
-Agents - Watermelon
-
----
+# Agents
 
 ## Agents and states
 An agent is modelled by the `Agent` class, which contains:

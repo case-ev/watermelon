@@ -1,6 +1,4 @@
-Graph creation and usage - Watermelon
-
----
+# Graph creation and usage
 
 ## How to create a graph
 To create a graph, you must first initialize the corresponding vertices and edges, which are created by `Vertex` and `Edge`, respectively.

@@ -1,6 +1,4 @@
-Vertex types and actions - Watermelon
-
----
+# Vertex types and actions
 
 ## Types & actions
 The idea behind the simulation of the graphs is that each vertex contains one (and only one) type, which indicates its functionality in the simulated reality. These types then allow specific actions, depending on the type.

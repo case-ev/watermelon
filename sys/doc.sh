@@ -8,6 +8,7 @@ cd docs
 
 BUILD_DIR="../build/docs"
 target="html"
+files=""
 
 while getopts "hpT:" arg
 do
@@ -29,8 +30,10 @@ for file in *; do
         echo -e "Compiling doc file \x1b[32;20m${file}\x1b[0m"
         filename="${file%.md}"
         title=`cat "$file" | head -n 1`
+        title=${title#\# }
         cat "$file" | tail -n +2 > "${BUILD_DIR}/temp/${filename}.md"
         pandoc -f markdown -t $target "${BUILD_DIR}/temp/${filename}.md" -o "${BUILD_DIR}/${filename}.${target}" --lua-filter lua/link_files.lua --css=styles/main.css --embed-resources --standalone --metadata title="$title"
+        files+=" ${filename}.md"
     fi
 done
 

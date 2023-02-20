@@ -1,6 +1,4 @@
-State of Charge & Uncertainty - Watermelon
-
----
+# State of Charge & Uncertainty
 
 ## Uncertainty models
 Since in the real world the State of Charge (SoC) of a battery can not be exactly known, it must be estimated. This estimation leads to errors which must be taken into consideration to develop a more robust model: thus, *watermelon* allows the user to specify some model for the uncertainty in the estimation of the SoC.
