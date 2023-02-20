@@ -4,11 +4,15 @@ watermelon.model.graph
 Modelling of the graph that represents the environment.
 """
 
+from typing import Callable, Hashable, List, Self
+
+import matplotlib.pyplot as plt
 import networkx as nx
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from watermelon_common.logger import LOGGER
+from watermelon.model.edge import Edge
 from watermelon.model.vertex import Vertex
 from watermelon.exceptions import NonExistentEdgeException
 
@@ -16,7 +20,7 @@ from watermelon.exceptions import NonExistentEdgeException
 class Graph:
     """Data structure for an abstract graph"""
 
-    def __init__(self, vertices=None, edges=None):
+    def __init__(self, vertices: List[Vertex] = None, edges: List[Edge] = None) -> None:
         self._verts_id = {}
         self._vertices = set()
         self._adj_mat = pd.DataFrame()
@@ -26,15 +30,15 @@ class Graph:
         if edges is not None:
             self.add_edges(edges)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return repr(self._adj_mat)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(
             self._adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e)
         )
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: Hashable) -> Vertex:
         try:
             # See if an iterable of id's is given
             vertices = []
@@ -46,21 +50,21 @@ class Graph:
             return self._verts_id[hash(key)]
 
     @property
-    def id(self):
+    def id(self) -> Hashable:
         """IDs of all vertices"""
         return self._verts_id.keys()
 
     @property
-    def vertices(self):
+    def vertices(self) -> List[Vertex]:
         """Vertices within the graph"""
         return self._vertices.copy()
 
     @property
-    def adj_mat(self):
+    def adj_mat(self) -> pd.DataFrame:
         """Adjacency matrix of the graph, which codifies the edges"""
         return self._adj_mat.copy()
 
-    def add_vertex(self, vertex):
+    def add_vertex(self, vertex: Hashable | Vertex) -> Self:
         """Add a vertex to the graph
 
         Parameters
@@ -85,7 +89,7 @@ class Graph:
         self._adj_mat.loc[parsed_vertex] = np.nan
         return self
 
-    def add_vertices(self, vertices):
+    def add_vertices(self, vertices: List[Hashable | Vertex]) -> Self:
         """Add a group of vertices to the graph
 
         Parameters
@@ -101,7 +105,7 @@ class Graph:
             self.add_vertex(vertex)
         return self
 
-    def add_edge(self, edge):
+    def add_edge(self, edge: Edge) -> Self:
         """Add an edge to the graph
 
         If the vertices are not found in the graph, it adds them first
@@ -126,7 +130,7 @@ class Graph:
         self._adj_mat.at[edge.origin, edge.target] = edge
         return self
 
-    def add_edges(self, edges):
+    def add_edges(self, edges: List[Edge]) -> Self:
         """Add a group of edges to the graph
 
         If the vertices are not found in the graph, it adds them first
@@ -144,19 +148,19 @@ class Graph:
             self.add_edge(edge)
         return self
 
-    def _parse_vertex(self, vertex):
+    def _parse_vertex(self, vertex_representation: Hashable | Vertex) -> Vertex:
         try:
-            if vertex in self._verts_id:
-                return self[vertex]
-            return vertex
+            if vertex_representation in self._verts_id:
+                return self[vertex_representation]
+            return vertex_representation
         except AttributeError:
-            return vertex
+            return vertex_representation
 
-    def get_vertex(self, vert_id):
+    def get_vertex(self, vert_id: Hashable) -> Vertex:
         """Get the vertex associated with a given ID"""
         return self._parse_vertex(vert_id)
 
-    def get_edge(self, vert1, vert2):
+    def get_edge(self, vert1: Hashable | Vertex, vert2: Hashable | Vertex) -> Edge:
         """Get the edge that connects two vertices"""
         vert1 = self._parse_vertex(vert1)
         vert2 = self._parse_vertex(vert2)
@@ -165,13 +169,13 @@ class Graph:
             raise NonExistentEdgeException(vert1, vert2)
         return result
 
-    def adjacent(self, vert1, vert2):
+    def adjacent(self, vert1: Hashable | Vertex, vert2: Hashable | Vertex) -> bool:
         """Indicate whether two vertices are adjacent"""
         vert1 = self._parse_vertex(vert1)
         vert2 = self._parse_vertex(vert2)
         return not pd.isnull(self.get_edge(vert1, vert2))
 
-    def neighbors(self, vertex):
+    def neighbors(self, vertex: Hashable | Vertex) -> List[Vertex]:
         """Get the neighbors of a vertex"""
         vertex = self._parse_vertex(vertex)
         return (
@@ -180,7 +184,7 @@ class Graph:
             .to_list()
         )
 
-    def draw(self, axis=None, pos_fn=None, **kwargs):
+    def draw(self, axis: plt.Axes = None, pos_fn: Callable = None, **kwargs) -> None:
         """Draw this graph using matplotlib
 
         It takes the graph, turns it into the convention used by networkx by taking the
@@ -197,7 +201,7 @@ class Graph:
         return draw_graph(self, axis, pos_fn, **kwargs)
 
 
-def draw_graph(graph, axis=None, pos_fn=None, **kwargs):
+def draw_graph(graph: Graph, axis: plt.Axes = None, pos_fn: Callable = None, **kwargs) -> None:
     """Draw a graph using matplotlib
 
     It takes the graph, turns it into the convention used by networkx by taking the
