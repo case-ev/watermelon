@@ -3,7 +3,7 @@
 # Build the source code and documentation
 
 upload=0
-skip_docs=0
+build_docs=0
 
 while getopts "ud" arg
 do
@@ -12,7 +12,7 @@ do
             upload=1
             ;;
         d)
-            skip_docs=1
+            build_docs=1
             ;;
     esac
 done
@@ -21,7 +21,7 @@ python -m pip install --upgrade pip
 pip install build
 python -m build
 
-if [ $skip_docs -eq 0 ]; then
+if [ $build_docs -eq 1 ]; then
     sys/doc.sh
 fi
 
