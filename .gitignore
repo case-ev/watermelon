@@ -178,4 +178,5 @@ cython_debug/
 ### Watermelon ###
 logs/
 examples/**/results/
-docs/book/
+book/
+docs/
