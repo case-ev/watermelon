@@ -3,10 +3,10 @@
 # This script compiles all the documentation to HTML. It is not necessary, since
 # the documentation is readable as a Markdown file.
 
-mkdir build/doc/temp -p
-cd doc
+mkdir build/docs/temp -p
+cd docs
 
-BUILD_DIR="../build/doc"
+BUILD_DIR="../build/docs"
 target="html"
 
 while getopts "hpT:" arg
