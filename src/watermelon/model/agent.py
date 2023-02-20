@@ -4,7 +4,7 @@ watermelon.model.agent
 Modelling of the agent and its decisions.
 """
 
-from typing import Hashable, List, Optional
+from typing import Hashable, List
 
 import numpy as np
 
