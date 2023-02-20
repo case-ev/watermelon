@@ -16,6 +16,11 @@ from watermelon.exceptions import ForbiddenActionException
 _MINUTES_PER_HOUR = 60
 
 
+###############################################################################
+# |=============================| Actions |===================================|#
+###############################################################################
+
+
 class VertexAction(abc.ABC):
     """Type of action"""
 
@@ -209,6 +214,11 @@ class DischargeMaterialAction(VertexAction):
         return time, -energy
 
 
+###############################################################################
+# |==============================| Types |====================================|#
+###############################################################################
+
+
 class VertexType(abc.ABC):
     """Base interface for a node type"""
 
@@ -290,6 +300,11 @@ class MaterialDischargeType(VertexType):
     def discharge_rate(self) -> float:
         """Rate in kg/minute at which material is discharged"""
         return self._discharge_rate
+
+
+###############################################################################
+# |==============================| Vertex |===================================|#
+###############################################################################
 
 
 class VertexMetaClass(type):
