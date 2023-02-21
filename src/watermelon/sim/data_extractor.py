@@ -45,14 +45,57 @@ class DataElement:
 
 class SimulationDataExtractor(abc.ABC):
     """Abstract class for an object that extracts data from a simulation"""
+    def __init__(self, simulation_state) -> None:
+        self._data = None
+        self.initialize(simulation_state)
+
+    @property
+    def data(self):
+        """Contained data of the simulation"""
+        return self._data
+
+    @data.setter
+    def data(self, new_data):
+        self._data = new_data
 
     @abc.abstractmethod
-    def initialize(self, data):
+    def _initialize(self, data):
         """Initialize the extractor"""
 
     @abc.abstractmethod
-    def append(self, simulation_state):
+    def _append(self, data):
         """Add new data"""
+
+    @staticmethod
+    @abc.abstractmethod
+    def extract_data(simulation_state):
+        """Extract the required data from the simulation"""
+
+    def initialize(self, simulation_state):
+        """Initialize the data extractor.
+
+        This method handles the extraction of the data internally.
+
+        Parameters
+        ----------
+        simulation_state : Simulator
+            Object that handles the simulation and contains the data associated
+            to the current time step.
+        """
+        return self._initialize(self.extract_data(simulation_state))
+
+    def append(self, simulation_state):
+        """Append some new data.
+
+        This method handles the extraction of the data internally.
+
+        Parameters
+        ----------
+        simulation_state : Simulator
+            Object that handles the simulation and contains the data associated
+            to the current time step.
+        """
+        return self._append(self.extract_data(simulation_state))
 
 
 class DataFrameExtractor(SimulationDataExtractor):
@@ -63,26 +106,19 @@ class DataFrameExtractor(SimulationDataExtractor):
     indicates the state of each agent at every instant.
     """
 
-    def __init__(self, state):
-        self.data = None
-        self.initialize(self.extract_data(state))
-
-    def initialize(self, data):
+    def _initialize(self, data):
         self.data = pd.DataFrame(data)
 
-    def append(self, simulation_state):
-        """Get the data from the simulator and append it"""
-        data = self.extract_data(simulation_state)
+    def _append(self, data):
         self.data = pd.concat([self.data, pd.DataFrame(data)], ignore_index=True)
 
     @staticmethod
-    def extract_data(simulation):
-        """Extract some input data according to the required format"""
+    def extract_data(simulation_state):
         states = {}
-        for a in simulation.agents:
+        for a in simulation_state.agents:
             i = a.state.current_action
             if i != 0:
                 states[a] = DataElement(a.actions[i], a.state.copy(), a.actions[i - 1])
             else:
                 states[a] = DataElement(a.actions[i], a.state.copy(), None)
-        return {"time": [simulation.time], **states}
+        return {"time": [simulation_state.time], **states}
