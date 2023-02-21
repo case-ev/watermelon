@@ -63,6 +63,10 @@ class Simulator:
         """Extractor for the simulation data"""
         return self.control.data_extractor
 
+    @data_extractor.setter
+    def data_extractor(self, val):
+        self.control.data_extractor = val
+
     def start(self, stop_time, *, extractor_cls=DataFrameExtractor):
         """Start the simulation. It must be ran before you start updating"""
         LOGGER.info("Starting simulation")
