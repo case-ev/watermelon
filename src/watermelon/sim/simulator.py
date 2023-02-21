@@ -158,6 +158,7 @@ class Simulator:
                 if not agent.state.is_waiting:
                     # This would happen when the agent stops waiting and acts
                     agent.state.action_time = 0
+                    LOGGER.info("%s started (%s, %s)", agent, vertex, action)
 
             if not agent.state.is_waiting:
                 time, energy = action.act(agent, vertex)
