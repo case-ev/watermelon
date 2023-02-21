@@ -74,7 +74,7 @@ class Simulator:
         return self.control.data_extractor
 
     @data_extractor.setter
-    def data_extractor(self, val) -> None:
+    def data_extractor(self, val: SimulationDataExtractor) -> None:
         self.control.data_extractor = val
 
     def start(
