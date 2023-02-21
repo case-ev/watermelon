@@ -20,6 +20,8 @@ def main(
     battery_eff=BATTERY_EFFICIENCY,
     out_file=None,
     save=False,
+    uncertainty=None,
+    **kwargs,
 ):
     """Entry point for the example"""
 
@@ -32,6 +34,20 @@ def main(
         out_file = (
             f"examples/simulation1/results/result-eff={eff_str[:-3]}_{eff_str[-2:]}.csv"
         )
+
+    match uncertainty:
+        case "no" | None:
+            uncertainty_source = wm.NoUncertainty()
+        case "gaussian":
+            mean = kwargs.get("mean")
+            std = kwargs.get("std")
+            uncertainty_kwargs = {}
+            if mean is not None:
+                uncertainty_kwargs["mean"] = float(mean)
+            if std is not None:
+                uncertainty_kwargs["std"] = float(std)
+            uncertainty_source = wm.GaussianUncertainty(**uncertainty_kwargs)
+
     LOGGER.info(
         "Using parameters delta=%.2f, stop_time=%.2f, battery_eff=%.2f",
         delta,
@@ -52,7 +68,7 @@ def main(
         plt.show()
 
     LOGGER.info("Creating agents")
-    agents = _create_agents(graph)
+    agents = _create_agents(graph, uncertainty_source)
 
     LOGGER.info("Initializing simulation")
     sim = wm.sim.Simulator(graph, agents, delta=delta, battery_eff=battery_eff)
@@ -69,7 +85,7 @@ def main(
         sim.data_extractor.data.to_csv(out_file, index=False)
 
 
-def _create_agents(graph):
+def _create_agents(graph, uncertainty=None):
     return [
         wm.Agent(
             0,
@@ -89,6 +105,7 @@ def _create_agents(graph):
                 wm.Decision(wm.Vertex(1), wm.DischargeMaterialAction()),
                 wm.Decision(wm.Vertex(0), wm.NullAction()),
             ],
+            uncertainty=uncertainty,
         ),
         wm.Agent(
             1,
@@ -108,6 +125,7 @@ def _create_agents(graph):
                 wm.Decision(wm.Vertex(1), wm.DischargeMaterialAction()),
                 wm.Decision(wm.Vertex(0), wm.NullAction()),
             ],
+            uncertainty=uncertainty,
         ),
         wm.Agent(
             2,
@@ -127,6 +145,7 @@ def _create_agents(graph):
                 wm.Decision(wm.Vertex(1), wm.DischargeMaterialAction()),
                 wm.Decision(wm.Vertex(0), wm.NullAction()),
             ],
+            uncertainty=uncertainty,
         ),
         wm.Agent(
             3,
@@ -146,6 +165,7 @@ def _create_agents(graph):
                 wm.Decision(wm.Vertex(1), wm.DischargeMaterialAction()),
                 wm.Decision(wm.Vertex(0), wm.NullAction()),
             ],
+            uncertainty=uncertainty,
         ),
         wm.Agent(
             4,
@@ -165,6 +185,7 @@ def _create_agents(graph):
                 wm.Decision(wm.Vertex(1), wm.DischargeMaterialAction()),
                 wm.Decision(wm.Vertex(0), wm.NullAction()),
             ],
+            uncertainty=uncertainty,
         ),
         wm.Agent(
             5,
@@ -184,6 +205,7 @@ def _create_agents(graph):
                 wm.Decision(wm.Vertex(1), wm.DischargeMaterialAction()),
                 wm.Decision(wm.Vertex(0), wm.NullAction()),
             ],
+            uncertainty=uncertainty,
         ),
         wm.Agent(
             6,
@@ -203,6 +225,7 @@ def _create_agents(graph):
                 wm.Decision(wm.Vertex(1), wm.DischargeMaterialAction()),
                 wm.Decision(wm.Vertex(0), wm.NullAction()),
             ],
+            uncertainty=uncertainty,
         ),
         wm.Agent(
             7,
@@ -221,5 +244,6 @@ def _create_agents(graph):
                 wm.Decision(wm.Vertex(1), wm.DischargeMaterialAction()),
                 wm.Decision(wm.Vertex(0), wm.NullAction()),
             ],
+            uncertainty=uncertainty,
         ),
     ]
