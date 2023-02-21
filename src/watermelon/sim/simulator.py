@@ -20,11 +20,36 @@ class Simulator:
         self,
         graph: Graph,
         agents: List[Agent],
+        *,
         control: SimulationControl = None,
         params: SimulationParameters = None,
         data_extractor_cls: type = DataFrameExtractor,
         **kwargs,
     ) -> None:
+        """Generate a simulation.
+
+        All keyword arguments passed to `kwargs` are taken either by
+        the control variables or the parameters of the simulation, if
+        the names match.
+
+        Parameters
+        ----------
+        graph : Graph
+            Graph on which the simulation is run.
+        agents : List[Agent]
+            List of agents to use for the simulation.
+        control : SimulationControl, optional
+            Set of control variables to use for the simulation, by default
+            None. Very rarely should you specify it this way, but the option
+            is there anyways.
+        params : SimulationParameters, optional
+            Set of simulation parameters to use, by default None. Very rarely
+            should you specify it this way, but the option is there anyways.
+        data_extractor_cls : type, optional
+            Class to use to extract data from the simulation, by default
+            `DataFrameExtractor`. This class should inherit from the
+            `SimulationDataExtractor` class.
+        """
         self.graph = graph
         self.agents = agents
         self.control = SimulationControl(**kwargs) if control is None else control
