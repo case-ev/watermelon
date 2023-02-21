@@ -46,6 +46,7 @@ class DataElement:
 
 class SimulationDataExtractor(abc.ABC):
     """Abstract class for an object that extracts data from a simulation"""
+
     def __init__(self, simulation_state: SimulationData) -> None:
         self._data = None
         self.initialize(simulation_state)

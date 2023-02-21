@@ -95,9 +95,7 @@ class Simulator:
         self._do_action(agent, vertex, action)
         self._check_next_action(agent, vertex)
 
-    def _do_action(
-        self, agent: Agent, vertex: Vertex, action: VertexAction
-    ) -> None:
+    def _do_action(self, agent: Agent, vertex: Vertex, action: VertexAction) -> None:
         if agent.state.is_travelling[0]:
             # It is travelling to a vertex
             _, origin, target = agent.state.is_travelling
