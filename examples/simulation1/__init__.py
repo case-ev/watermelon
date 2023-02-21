@@ -10,14 +10,22 @@ import matplotlib.pyplot as plt
 from watermelon_common.logger import LOGGER
 from examples._graphs.toy import ex_graph2
 import watermelon as wm
+from watermelon.defaults import BATTERY_EFFICIENCY
 
 
-def main(delta=1, stop_time=180, show=False):
+def main(delta=1, stop_time=180, show=False, battery_eff=BATTERY_EFFICIENCY):
     """Entry point for the example"""
 
     LOGGER.info("Parsing example arguments")
     delta = float(delta)
     stop_time = float(stop_time)
+    battery_eff = float(battery_eff)
+    LOGGER.info(
+        "Using parameters delta=%.2f, stop_time=%.2f, battery_eff=%.2f",
+        delta,
+        stop_time,
+        battery_eff,
+    )
 
     LOGGER.info("Creating environment")
     graph = ex_graph2()
@@ -33,7 +41,7 @@ def main(delta=1, stop_time=180, show=False):
     agents = _create_agents(graph)
 
     LOGGER.info("Initializing simulation")
-    sim = wm.sim.Simulator(graph, agents, delta=delta)
+    sim = wm.sim.Simulator(graph, agents, delta=delta, battery_eff=battery_eff)
     sim.start(stop_time)
 
     LOGGER.info("Going into main loop")
@@ -42,8 +50,9 @@ def main(delta=1, stop_time=180, show=False):
 
     LOGGER.info("Finished simulation, showing results")
     print(sim.data_extractor.data)
+    eff_str = f"{battery_eff:.2f}"
     sim.data_extractor.data.to_csv(
-        "examples/simulation1/results/result.csv", index=False
+        f"examples/simulation1/results/result-eff={eff_str[:-3]}_{eff_str[-2:]}.csv", index=False
     )
 
 
