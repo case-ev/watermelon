@@ -19,14 +19,15 @@ sys/build.sh
 to build the code using the default behavior. You can also call `sys/build.sh -d` instead, which also builds the documentation (**WARNING**: Read the [Building docs](#building-docs) section before building the documentation).
 
 ## Building docs
-Building the documentation requires [mdBook](https://github.com/rust-lang/mdBook), which requires having *Cargo* (and thus, *Rust*) installed. The latter is explained in the [following](https://www.rust-lang.org/learn/get-started) page.
+Building the documentation requires [mdBook](https://github.com/rust-lang/mdBook). To install it, you can
 
-If you have *Cargo* installed, simply install *mdBook* by running
+- Use *Cargo*, which is available in the [following](https://www.rust-lang.org/learn/get-started) page. If you have *Cargo* installed, simply install *mdBook* by running
 ```bash
 cargo install mdbook
 ```
+- Download the precompiled binaries, available in the [following](https://github.com/rust-lang/mdBook/releases) page.
 
-Once you have it installed, run
+Once you have *mdBook* installed, run
 ```bash
 sys/doc.sh
 ```
