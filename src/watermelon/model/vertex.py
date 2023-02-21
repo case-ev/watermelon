@@ -4,6 +4,8 @@ watermelon.model.vertex
 Definition of a vertex in the graph.
 """
 
+from typing import Hashable
+
 from watermelon.model.types import EmptyVertexType, VertexType
 
 
@@ -12,7 +14,7 @@ class VertexMetaClass(type):
 
     _instances = {}
 
-    def __call__(cls, identifier: object, *args, **kwargs):
+    def __call__(cls, identifier: Hashable, *args, **kwargs):
         id_hash = hash(identifier)
         if id_hash not in cls._instances:
             instance = super().__call__(identifier, *args, **kwargs)
@@ -28,7 +30,7 @@ class Vertex(metaclass=VertexMetaClass):
     """
 
     def __init__(
-        self, identifier: object, capacity: int = None, vertex_type: VertexType = None
+        self, identifier: Hashable, capacity: int = None, vertex_type: VertexType = None
     ) -> None:
         self._id = identifier
         self._id_hash = hash(identifier)
@@ -39,7 +41,7 @@ class Vertex(metaclass=VertexMetaClass):
     def __hash__(self) -> int:
         return self.hash
 
-    def __eq__(self, __o: object) -> bool:
+    def __eq__(self, __o: Hashable) -> bool:
         return (
             hash(self) == hash(__o)
             and self.type == __o.type
@@ -53,7 +55,7 @@ class Vertex(metaclass=VertexMetaClass):
         return f"{str(self.type)}({str(self.id)})"
 
     @property
-    def id(self) -> object:
+    def id(self) -> Hashable:
         """Unique ID of the vertex"""
         return self._id
 
