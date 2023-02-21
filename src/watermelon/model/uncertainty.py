@@ -12,6 +12,8 @@ import numpy as np
 class UncertaintySource(abc.ABC):
     """Abstract source of uncertainty"""
 
+    RNG = np.random.default_rng()
+
     @property
     @abc.abstractmethod
     def last(self) -> float:
@@ -49,6 +51,6 @@ class GaussianUncertainty(UncertaintySource):
         return self._last_sample
 
     def sample(self) -> float:
-        value = np.random.default_rng().normal(self.mean, self.std)
+        value = self.RNG.normal(self.mean, self.std)
         self._last_sample = value
         return value
