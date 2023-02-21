@@ -5,9 +5,11 @@ A data extractor in *watermelon* is an object that stores all the data of the si
 
 - `_initialize()`: Initialize the `data` attribute to the necessary data type. This depends on the implementation.
 - `_append()`: This is called on each iteration of the simulation, and its implementation depends on the type of the stored data.
-- `extract_data()`: This static method is the one that extracts data from the `Simulator` object. It must return data in a format that `_initialize` and `_append` can understand.
+- `extract_data()`: This static method is the one that extracts data from the `SimulatorData` object. It must return data in a format that `_initialize` and `_append` can understand.
 
 Something important to note is that, similar to how agent actions are handled internally, while the methods that are implemented are `_initialize` and `_append`, when using *watermelon* you have to call `initialize` and `append` instead, respectively. These methods handle the data formatting and extraction internally.
+
+Another thing to note is that, while `extract_data()` takes an instance of the `SimulatorData` object, because of duck typing and the way the data is laid out you can directly pass it an instance of `Simulator` instead, and the data will be extracted from the current state without any issue.
 
 ## Default implementations
 ### Pandas `DataFrameExtractor`
