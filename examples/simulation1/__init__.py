@@ -30,7 +30,25 @@ def main(delta=1, stop_time=180, show=False):
         plt.show()
 
     LOGGER.info("Creating agents")
-    agents = [
+    agents = _create_agents(graph)
+
+    LOGGER.info("Initializing simulation")
+    sim = wm.sim.Simulator(graph, agents, delta=delta)
+    sim.start(stop_time)
+
+    LOGGER.info("Going into main loop")
+    while not sim.should_close:
+        sim.update()
+
+    LOGGER.info("Finished simulation, showing results")
+    print(sim.data_extractor.data)
+    sim.data_extractor.data.to_csv(
+        "examples/simulation1/results/result.csv", index=False
+    )
+
+
+def _create_agents(graph):
+    return [
         wm.Agent(
             0,
             graph,
@@ -183,17 +201,3 @@ def main(delta=1, stop_time=180, show=False):
             ],
         ),
     ]
-
-    LOGGER.info("Initializing simulation")
-    sim = wm.sim.Simulator(graph, agents, delta=delta)
-    sim.start(stop_time)
-
-    LOGGER.info("Going into main loop")
-    while not sim.should_close:
-        sim.update()
-
-    LOGGER.info("Finished simulation, showing results")
-    print(sim.data_extractor.data)
-    sim.data_extractor.data.to_csv(
-        "examples/simulation1/results/result.csv", index=False
-    )
