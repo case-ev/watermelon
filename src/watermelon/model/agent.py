@@ -212,7 +212,10 @@ class Agent(metaclass=AgentMetaClass):
         self, energy_delta: float, battery_efficiency: float = BATTERY_EFFICIENCY
     ) -> None:
         """Insert/remove a given amount of energy from the battery"""
-        self.state.soc += self.energy_as_soc(energy_delta, battery_efficiency)
+        soc = self.energy_as_soc(energy_delta, battery_efficiency)
+        if self.state.soc != 0 and self.state.soc + soc <= 0:
+            LOGGER.warning("%s out of charge", self)
+        self.state.soc += soc
 
     @property
     def soc(self) -> float:
@@ -221,6 +224,8 @@ class Agent(metaclass=AgentMetaClass):
 
     @soc.setter
     def soc(self, val: float) -> None:
+        if self.state.soc != 0 and val <= 0:
+            LOGGER.warning("%s out of charge", self)
         self.state.soc = val + self.uncertainty.sample()
 
 

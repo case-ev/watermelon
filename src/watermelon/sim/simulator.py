@@ -141,13 +141,6 @@ class Simulator:
                 agent.state.is_travelling = (False, None, None)
                 agent.state.just_arrived = True
                 agent.state.action_time = 0
-                if (
-                    agent.state.soc != 0
-                    and agent.state.soc
-                    - agent.energy_as_soc(edge.weight, self.params.battery_eff)
-                    <= 0
-                ):
-                    LOGGER.warning("%s out of charge", agent)
                 agent.insert_energy(-edge.weight, self.params.battery_eff)
 
         if not agent.state.is_travelling[0]:
@@ -181,13 +174,6 @@ class Simulator:
                 if agent.state.action_time > time:
                     vertex.members.discard(agent)
                     agent.state.finished_action = True
-                    if (
-                        agent.state.soc != 0
-                        and agent.state.soc
-                        - agent.energy_as_soc(energy, self.params.battery_eff)
-                        <= 0
-                    ):
-                        LOGGER.warning("%s out of charge", agent)
                     agent.insert_energy(energy, self.params.battery_eff)
 
     def _check_next_action(self, agent: Agent, vertex: Vertex) -> None:
