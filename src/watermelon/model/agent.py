@@ -202,11 +202,17 @@ class Agent(metaclass=AgentMetaClass):
         """Hash of the unique ID of the agent."""
         return self._id_hash
 
+    def energy_as_soc(
+        self, energy: float, battery_efficiency: float = BATTERY_EFFICIENCY
+    ) -> float:
+        """Interpret some given amount of energy as SoC"""
+        return energy / (battery_efficiency * self.battery_capacity)
+
     def insert_energy(
         self, energy_delta: float, battery_efficiency: float = BATTERY_EFFICIENCY
     ) -> None:
         """Insert/remove a given amount of energy from the battery"""
-        self.state.soc += energy_delta / (battery_efficiency * self.battery_capacity)
+        self.state.soc += self.energy_as_soc(energy_delta, battery_efficiency)
 
     @property
     def soc(self) -> float:
