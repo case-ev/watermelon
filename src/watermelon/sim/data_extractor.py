@@ -10,6 +10,7 @@ import dataclasses
 import pandas as pd
 
 from watermelon.model.agent import AgentState, Decision
+from watermelon.sim.data import SimulationData
 
 
 @dataclasses.dataclass
@@ -45,7 +46,7 @@ class DataElement:
 
 class SimulationDataExtractor(abc.ABC):
     """Abstract class for an object that extracts data from a simulation"""
-    def __init__(self, simulation_state) -> None:
+    def __init__(self, simulation_state: SimulationData) -> None:
         self._data = None
         self.initialize(simulation_state)
 
@@ -55,45 +56,49 @@ class SimulationDataExtractor(abc.ABC):
         return self._data
 
     @data.setter
-    def data(self, new_data):
+    def data(self, new_data: object):
         self._data = new_data
 
     @abc.abstractmethod
-    def _initialize(self, data):
+    def _initialize(self, data: object) -> None:
         """Initialize the extractor"""
 
     @abc.abstractmethod
-    def _append(self, data):
+    def _append(self, data: object) -> None:
         """Add new data"""
 
     @staticmethod
     @abc.abstractmethod
-    def extract_data(simulation_state):
+    def extract_data(simulation_state: SimulationData) -> object:
         """Extract the required data from the simulation"""
 
-    def initialize(self, simulation_state):
+    def initialize(self, simulation_state: SimulationData) -> None:
         """Initialize the data extractor.
 
         This method handles the extraction of the data internally.
 
         Parameters
         ----------
-        simulation_state : Simulator
-            Object that handles the simulation and contains the data associated
-            to the current time step.
+        simulation_state : SimulationData
+            Object that contains the raw data extracted from a simulation.
+            Because of duck typing, you could also pass it the raw simulator
+            object on each time step, and it would extract from the current
+            state.
         """
         return self._initialize(self.extract_data(simulation_state))
 
-    def append(self, simulation_state):
+    def append(self, simulation_state: SimulationData) -> None:
         """Append some new data.
 
         This method handles the extraction of the data internally.
 
         Parameters
         ----------
-        simulation_state : Simulator
-            Object that handles the simulation and contains the data associated
-            to the current time step.
+        simulation_state : SimulationData
+            Object that contains the raw data extracted from a simulation.
+            Because of duck typing, you could also pass it the raw simulator
+            object on each time step, and it would extract from the current
+            state.
         """
         return self._append(self.extract_data(simulation_state))
 
@@ -106,14 +111,14 @@ class DataFrameExtractor(SimulationDataExtractor):
     indicates the state of each agent at every instant.
     """
 
-    def _initialize(self, data):
+    def _initialize(self, data: object) -> None:
         self.data = pd.DataFrame(data)
 
-    def _append(self, data):
+    def _append(self, data: object) -> None:
         self.data = pd.concat([self.data, pd.DataFrame(data)], ignore_index=True)
 
     @staticmethod
-    def extract_data(simulation_state):
+    def extract_data(simulation_state: SimulationData) -> object:
         states = {}
         for a in simulation_state.agents:
             i = a.state.current_action

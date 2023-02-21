@@ -8,38 +8,9 @@ of agents and runs the simulation given their decisions.
 from typing import List
 
 from watermelon_common.logger import LOGGER
-from watermelon.defaults import BATTERY_EFFICIENCY
-from watermelon import model
+from watermelon.model import Agent, Graph, Vertex, VertexAction
 from watermelon.sim.data_extractor import DataFrameExtractor, SimulationDataExtractor
-
-
-class SimulationParameters:
-    """Parameters for the simulation"""
-
-    def __init__(self, *, battery_eff: float = BATTERY_EFFICIENCY, **_) -> None:
-        self.battery_eff = battery_eff
-
-
-class SimulationControl:
-    """Control variables for the simulation"""
-
-    def __init__(
-        self,
-        *,
-        time: float = 0.0,
-        delta: float = 1e-3,
-        iteration: int = 0,
-        should_close: bool = False,
-        stop_time: float = 0.0,
-        data_extractor: SimulationDataExtractor = None,
-        **_,
-    ) -> None:
-        self.time = time
-        self.delta = delta
-        self.iteration = iteration
-        self.should_close = should_close
-        self.stop_time = stop_time
-        self.data_extractor = data_extractor
+from watermelon.sim.parameters import SimulationControl, SimulationParameters
 
 
 class Simulator:
@@ -47,16 +18,19 @@ class Simulator:
 
     def __init__(
         self,
-        graph: model.Graph,
-        agents: List[model.Agent],
+        graph: Graph,
+        agents: List[Agent],
         control: SimulationControl = None,
         params: SimulationParameters = None,
+        data_extractor_cls: type = DataFrameExtractor,
         **kwargs,
     ) -> None:
         self.graph = graph
         self.agents = agents
         self.control = SimulationControl(**kwargs) if control is None else control
         self.params = SimulationParameters(**kwargs) if params is None else params
+        self.data_extractor = None
+        self._extractor_cls = data_extractor_cls
 
     @property
     def time(self) -> float:
@@ -68,24 +42,18 @@ class Simulator:
         """Control variable that indicates if the simulation should end"""
         return self.control.should_close
 
-    @property
-    def data_extractor(self) -> SimulationDataExtractor:
-        """Extractor for the simulation data"""
-        return self.control.data_extractor
-
-    @data_extractor.setter
-    def data_extractor(self, val: SimulationDataExtractor) -> None:
-        self.control.data_extractor = val
-
     def start(
         self,
         stop_time: float,
         *,
-        extractor_cls: SimulationDataExtractor = DataFrameExtractor,
+        extractor_cls: SimulationDataExtractor = None,
     ) -> None:
         """Start the simulation. It must be ran before you start updating"""
         LOGGER.info("Starting simulation")
-        self.control.data_extractor = extractor_cls(self)
+        if extractor_cls is not None:
+            self.data_extractor = extractor_cls(self)
+        else:
+            self.data_extractor = self._extractor_cls(self)
         self.control.iteration = 0
         self.control.stop_time = stop_time
         self.control.should_close = False
@@ -114,21 +82,21 @@ class Simulator:
 
         # Store the data
         try:
-            self.control.data_extractor.append(self)
+            self.data_extractor.append(self)
         except AttributeError:
             LOGGER.error(
                 "Failed to append data to the extractor. Did you forget to start the simulation?"
             )
             self.control.should_close = True
 
-    def _update_agent(self, agent: model.Agent) -> None:
+    def _update_agent(self, agent: Agent) -> None:
         decision = agent.actions[agent.state.current_action]
         vertex, action = decision.tuple()
         self._do_action(agent, vertex, action)
         self._check_next_action(agent, vertex)
 
     def _do_action(
-        self, agent: model.Agent, vertex: model.Vertex, action: model.VertexAction
+        self, agent: Agent, vertex: Vertex, action: VertexAction
     ) -> None:
         if agent.state.is_travelling[0]:
             # It is travelling to a vertex
@@ -184,7 +152,7 @@ class Simulator:
                     agent.state.finished_action = True
                     agent.insert_energy(energy, self.params.battery_eff)
 
-    def _check_next_action(self, agent: model.Agent, vertex: model.Vertex) -> None:
+    def _check_next_action(self, agent: Agent, vertex: Vertex) -> None:
         if agent.state.finished_action:
             # Send the agent to sleep if there are no more actions left
             if agent.state.current_action + 1 >= len(agent.actions):
