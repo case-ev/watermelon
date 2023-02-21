@@ -8,7 +8,12 @@
 
 # Reference guide
 
-- [Graph creation and usage](reference/graph.md)
-- [Vertex types and actions](reference/vertices.md)
-- [Agents and state](reference/agents.md)
-- [State of Charge](reference/soc.md)
+- [Model](reference/model/model_intro.md)
+    - [Graph creation and usage](reference/model/graph.md)
+    - [Vertex types and actions](reference/model/vertices.md)
+    - [Agents and state](reference/model/agents.md)
+    - [State of Charge](reference/model/soc.md)
+
+- [Simulator](reference/simulator/simulator_intro.md)
+    - [Functionality](reference/simulator/simulator.md)
+    - [Data extractors](reference/simulator/data_extractor.md)
