@@ -13,19 +13,33 @@ import watermelon as wm
 from watermelon.defaults import BATTERY_EFFICIENCY
 
 
-def main(delta=1, stop_time=180, show=False, battery_eff=BATTERY_EFFICIENCY):
+def main(
+    delta=1,
+    stop_time=180,
+    show=False,
+    battery_eff=BATTERY_EFFICIENCY,
+    out_file=None,
+    save=False,
+):
     """Entry point for the example"""
 
     LOGGER.info("Parsing example arguments")
     delta = float(delta)
     stop_time = float(stop_time)
     battery_eff = float(battery_eff)
+    if out_file is None:
+        eff_str = f"{battery_eff:.2f}"
+        out_file = (
+            f"examples/simulation1/results/result-eff={eff_str[:-3]}_{eff_str[-2:]}.csv"
+        )
     LOGGER.info(
         "Using parameters delta=%.2f, stop_time=%.2f, battery_eff=%.2f",
         delta,
         stop_time,
         battery_eff,
     )
+    if save:
+        LOGGER.info("Output file is %s", out_file)
 
     LOGGER.info("Creating environment")
     graph = ex_graph2()
@@ -50,10 +64,9 @@ def main(delta=1, stop_time=180, show=False, battery_eff=BATTERY_EFFICIENCY):
 
     LOGGER.info("Finished simulation, showing results")
     print(sim.data_extractor.data)
-    eff_str = f"{battery_eff:.2f}"
-    sim.data_extractor.data.to_csv(
-        f"examples/simulation1/results/result-eff={eff_str[:-3]}_{eff_str[-2:]}.csv", index=False
-    )
+    if save:
+        LOGGER.info("Saving file to %s", out_file)
+        sim.data_extractor.data.to_csv(out_file, index=False)
 
 
 def _create_agents(graph):
