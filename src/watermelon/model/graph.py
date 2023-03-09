@@ -60,6 +60,18 @@ class Graph:
         return self._vertices.copy()
 
     @property
+    def edges(self) -> List[Edge]:
+        """Edges within the graph"""
+        edges = []
+        axes = self._adj_mat.axes
+        for row in axes[0]:
+            for col in axes[1]:
+                e = self._adj_mat[col][row]
+                if not pd.isnull(e):
+                    edges.append(e.copy())
+        return edges
+
+    @property
     def adj_mat(self) -> pd.DataFrame:
         """Adjacency matrix of the graph, which codifies the edges"""
         return self._adj_mat.copy()
