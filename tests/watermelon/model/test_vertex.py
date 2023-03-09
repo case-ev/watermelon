@@ -54,5 +54,5 @@ def test_str():
     for i in range(10):
         v1 = wm.Vertex(i, wm.EmptyVertexType())
         v2 = wm.Vertex(str(i), wm.EmptyVertexType())
-        assert str(v1) == f"\u03b8({i})"
-        assert str(v2) == f"\u03b8({i})"
+        assert str(v1) == f"\u0398({i})"
+        assert str(v2) == f"\u0398({i})"

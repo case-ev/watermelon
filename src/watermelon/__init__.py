@@ -6,4 +6,4 @@ behaviour of a fleet of electric vehicles.
 """
 
 from .model import *
-from . import sim, solver
+from . import sim

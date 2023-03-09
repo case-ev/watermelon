@@ -90,7 +90,7 @@ def test_str():
         e2 = wm.Edge(v1, v2, 10)
         e3 = wm.Edge(v1, v2, time=10)
         e4 = wm.Edge(v1, v2, 5, 6)
-        assert str(e1) == f"(\u03b8({i})->\u03b8({i + 1}); w=None, t=None)"
-        assert str(e2) == f"(\u03b8({i})->\u03b8({i + 1}); w=10, t=None)"
-        assert str(e3) == f"(\u03b8({i})->\u03b8({i + 1}); w=None, t=10)"
-        assert str(e4) == f"(\u03b8({i})->\u03b8({i + 1}); w=5, t=6)"
+        assert str(e1) == f"(\u0398({i})->\u0398({i + 1}); w=None, t=None)"
+        assert str(e2) == f"(\u0398({i})->\u0398({i + 1}); w=10, t=None)"
+        assert str(e3) == f"(\u0398({i})->\u0398({i + 1}); w=None, t=10)"
+        assert str(e4) == f"(\u0398({i})->\u0398({i + 1}); w=5, t=6)"
