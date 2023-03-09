@@ -35,7 +35,7 @@ class Graph:
 
     def __str__(self) -> str:
         return str(
-            self._adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else e)
+            self._adj_mat.applymap(lambda e: e.weight if not pd.isnull(e) else "-")
         )
 
     def __getitem__(self, key: Hashable) -> Vertex:
