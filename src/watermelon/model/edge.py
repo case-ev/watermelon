@@ -29,6 +29,9 @@ class Edge:
             and self.time == __o.time
         )
 
+    def __hash__(self) -> int:
+        return hash((self.origin, self.target, self.weight, self.time))
+
     def __repr__(self) -> str:
         return f"Edge(origin={repr(self.origin)}, target={repr(self.target)}, \
 weight={repr(self.weight)}, time={repr(self.time)})"
