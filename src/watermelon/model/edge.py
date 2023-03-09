@@ -18,6 +18,10 @@ class Edge:
         self.weight = weight
         self.time = time
 
+    def copy(self):
+        """Create a copy of this edge"""
+        return Edge(self.origin, self.target, self.weight, self.time)
+
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, self.__class__):
             return False
