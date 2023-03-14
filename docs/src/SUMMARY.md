@@ -17,3 +17,6 @@
 - [Simulator](reference/simulator/simulator_intro.md)
     - [Functionality](reference/simulator/simulator.md)
     - [Data extractors](reference/simulator/data_extractor.md)
+
+- [Solver](reference/solver/solver_intro.md)
+    - [Architecture](reference/solver/architecture.md)
