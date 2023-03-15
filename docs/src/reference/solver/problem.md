@@ -30,12 +30,14 @@ where \\(C(\cdot)\\) is the cost function, \\(T(\cdot)\\) is the time function, 
 ### Modelling costs
 
 The proposed cost function is of the form
+
 \\[
     C(\mathbf{x}) = \sum_{n\geq 0}\frac{\mathbf{c}_n^{\mathrm{T}}\mathbf{x}}{\left(1 + r\right)^{n}}
 \\]
 where \\(\mathbf{c}_n\in\mathbb{R}^{|V|}\\) refers to the cost at period \\(n\\), such that each of its components indicates the cost of a specific vertex. \\(r\\) is a discount rate, which is used to project future costs to the present.
 
 Assuming that there are only two unique costs, an initial cost \\(\mathbf{c}_0\\) and an operation cost \\(\mathbf{c}\\), the cost function can be expressed as
+
 \\[
     C(\mathbf{x}) = \left(\mathbf{c}_0 + \frac{\mathbf{c}}{r}\right)^{\mathrm{T}}\mathbf{x}
 \\]
@@ -45,6 +47,7 @@ Assuming that there are only two unique costs, an initial cost \\(\mathbf{c}_0\\
 In order to model the penalization of times, it is necessary to solve the ARP and extract the best solution out of it. This solution for some charger distribution \\(\mathbf{x}\\) is passed back to the statistic, and its additive inverse is then used as the reward.
 
 Formalizing this, suppose the sequences \\(d^{(1)}, \dots, d^{(M)}\\) are the solution to the ARP for some distribution \\(\mathbf{x}\\). Then, the time reward is defined as
+
 \\[
     T(\mathbf{x}) = -\mathcal{T}\left(\left.d^{(1)}, \dots, d^{(M)}\right|\mathbf{x}\right)
 \\]
