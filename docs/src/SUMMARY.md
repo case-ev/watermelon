@@ -19,4 +19,7 @@
     - [Data extractors](reference/simulator/data_extractor.md)
 
 - [Solver](reference/solver/solver_intro.md)
-    - [Architecture](reference/solver/architecture.md)
+    - [Optimization problem](reference/solver/problem.md)
+    - [Genetic algorithms](reference/solver/ga/ga_intro.md)
+        - [Architecture](reference/solver/ga/architecture.md)
+        - [Encoding scheme](reference/solver/ga/encoding.md)
