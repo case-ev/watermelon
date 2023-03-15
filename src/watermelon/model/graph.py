@@ -49,6 +49,11 @@ class Graph:
             # This would happen if it is not an iterable
             return self._verts_id[hash(key)]
 
+    def __contains__(self, key: Hashable | Vertex) -> bool:
+        if isinstance(key, Vertex):
+            return key in self._vertices
+        return key in self._verts_id
+
     @property
     def id(self) -> Hashable:
         """IDs of all vertices"""
