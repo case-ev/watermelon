@@ -2,9 +2,9 @@
 
 # Run tools from the root directory of the project
 
-echo -e "# TODO\nThis file contains a list of the TODO tasks found within the source code of *watermelon*.\n\n" > TODO.md
+echo -e "# TODO\nThis file contains a list of the TODO/FIXME tasks found within the source code.\n\n" > TODO.md
 
-patterns=$(grep -Er "[\/#]* TODO: ([\w\s]*)" ./*)
+patterns=$(grep -Er "[\/#]* (TODO|FIXME): ([\w\s]*)" ./*)
 
 while read n; do
     filename=`echo $n | cut -d : -f 1`
