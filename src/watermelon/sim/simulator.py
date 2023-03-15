@@ -69,7 +69,7 @@ class Simulator:
 
     def start(
         self,
-        stop_time: float,
+        stop_time: float = None,
         *,
         extractor_cls: SimulationDataExtractor = None,
     ) -> None:
@@ -80,7 +80,8 @@ class Simulator:
         else:
             self.data_extractor = self._extractor_cls(self)
         self.control.iteration = 0
-        self.control.stop_time = stop_time
+        if stop_time is not None:
+            self.control.stop_time = stop_time
         self.control.should_close = False
 
     def update(self) -> None:
