@@ -34,6 +34,8 @@ class GraphFitness:
         self.agents = agents
         self._graph = graph
         self.agent_fitness = agent_fitness
+        self.agent_fitness.agents = self.agents
+
         self.decoder = (
             GraphDecoder(self._graph) if decoder is None else decoder(self._graph)
         )

@@ -69,16 +69,17 @@ class AgentFitness:
 
     def __init__(
         self,
-        agents: List[wm.Agent],
+        agents: List[wm.Agent] = None,
         *,
         decoder=None,
         stat: Callable[[*Tuple[wm.Vertex, wm.VertexAction], wm.Graph, wm.sim.Simulator], float]
         | str = None,
         **kwargs,
     ) -> None:
-        self.agents = agents
+        self._agents = agents
         self.decoder = ActionDecoder() if decoder is None else decoder()
-        self.sim = wm.sim.Simulator(None, agents, **kwargs)
+        self.sim = wm.sim.Simulator(None, self._agents, **kwargs)
+        self._sim_kwargs = kwargs
 
         if isinstance(stat, str):
             match stat:
@@ -95,6 +96,16 @@ class AgentFitness:
 
         else:
             self.statistic = stat if stat is not None else _cumulative_statistic
+
+    @property
+    def agents(self):
+        """Agents in the graph"""
+        return self._agents
+
+    @agents.setter
+    def agents(self, val):
+        self._agents = val
+        self.sim = wm.sim.Simulator(None, val, **self._sim_kwargs)
 
     def evaluate(self, code: List[bool], graph: wm.Graph) -> float:
         """Evaluate the given actions"""
