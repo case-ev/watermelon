@@ -26,14 +26,16 @@ class GraphFitness:
         l: float = 0.5,
         discount_rate: float = 0.08,
         *,
-        decoder = None,
+        decoder=None,
     ) -> None:
         self.initial_costs = initial_costs
         self.op_costs = op_costs
         self.agents = agents
         self._graph = graph
         self.agent_fitness = agent_fitness
-        self.decoder = GraphDecoder(self._graph) if decoder is None else decoder(self._graph)
+        self.decoder = (
+            GraphDecoder(self._graph) if decoder is None else decoder(self._graph)
+        )
         self.l = l
         self.discount_rate = discount_rate
 
