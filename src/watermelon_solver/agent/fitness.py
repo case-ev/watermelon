@@ -69,7 +69,9 @@ class AgentFitness:
         agents: List[wm.Agent] = None,
         *,
         decoder=None,
-        stat: Callable[[*Tuple[wm.Vertex, wm.VertexAction], wm.Graph, wm.sim.Simulator], float]
+        stat: Callable[
+            [*Tuple[wm.Vertex, wm.VertexAction], wm.Graph, wm.sim.Simulator], float
+        ]
         | str = None,
         **kwargs,
     ) -> None:
