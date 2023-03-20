@@ -58,10 +58,7 @@ def _cumulative_statistic(*decisions, graph, sim):
     if times is None:
         return MINIMUM_REWARD
 
-    total_time = 0
-    for t in times.values():
-        total_time += t
-    return -total_time
+    return -np.sum(list(times.values()))
 
 
 class AgentFitness:
