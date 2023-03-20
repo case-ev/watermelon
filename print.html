@@ -1,0 +1,393 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Watermelon</title>
+        <meta name="robots" content="noindex" />
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage guide</li><li class="chapter-item expanded "><a href="usage/examples.html"><strong aria-hidden="true">1.</strong> Examples</a></li><li class="chapter-item expanded affix "><li class="part-title">Reference guide</li><li class="chapter-item expanded "><a href="reference/model/model_intro.html"><strong aria-hidden="true">2.</strong> Model</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/model/graph.html"><strong aria-hidden="true">2.1.</strong> Graph creation and usage</a></li><li class="chapter-item expanded "><a href="reference/model/vertices.html"><strong aria-hidden="true">2.2.</strong> Vertex types and actions</a></li><li class="chapter-item expanded "><a href="reference/model/agents.html"><strong aria-hidden="true">2.3.</strong> Agents and state</a></li><li class="chapter-item expanded "><a href="reference/model/soc.html"><strong aria-hidden="true">2.4.</strong> State of Charge</a></li></ol></li><li class="chapter-item expanded "><a href="reference/simulator/simulator_intro.html"><strong aria-hidden="true">3.</strong> Simulator</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/simulator/simulator.html"><strong aria-hidden="true">3.1.</strong> Functionality</a></li><li class="chapter-item expanded "><a href="reference/simulator/data_extractor.html"><strong aria-hidden="true">3.2.</strong> Data extractors</a></li></ol></li><li class="chapter-item expanded "><a href="reference/solver/solver_intro.html"><strong aria-hidden="true">4.</strong> Solver</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/solver/problem.html"><strong aria-hidden="true">4.1.</strong> Optimization problem</a></li><li class="chapter-item expanded "><a href="reference/solver/ga/ga_intro.html"><strong aria-hidden="true">4.2.</strong> Genetic algorithms</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/solver/ga/architecture.html"><strong aria-hidden="true">4.2.1.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="reference/solver/ga/encoding.html"><strong aria-hidden="true">4.2.2.</strong> Encoding scheme</a></li></ol></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Watermelon</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>Hello world!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="example-guidelines"><a class="header" href="#example-guidelines">Example guidelines</a></h1>
+<h2 id="how-to-run-examples"><a class="header" href="#how-to-run-examples">How to run examples</a></h2>
+<p>To run an example, standing at the root directory of the project simply run</p>
+<pre><code class="language-bash">python -m examples &lt;EXAMPLE&gt; [&lt;POSITIONAL_ARGUMENTS&gt;...] [&lt;KEYWORD_ARGUMENTS&gt;...]
+</code></pre>
+<p>Keyword arguments are specified by passing an argument of the form <code>&lt;key&gt;=&lt;value&gt;</code>. The type of the value must be handled and cast by the example, to avoid any errors or unexpected behaviour.</p>
+<p>Additionally, the following flags can be passed to the example:</p>
+<ul>
+<li><code>-v</code>, <code>--verbose</code> : Runs in verbose mode, which means any logs of level <em>INFO</em> and above are printed to stdout.</li>
+<li><code>-d</code>, <code>--debug</code> : Runs in debug mode, which means any logs of level <em>DEBUG</em> and above are printed to stdout, and it might enable special debugging behaviour, depending on the example.</li>
+<li><code>--log &lt;LOG&gt;</code> : Makes the program output all logs to the file given by <code>&lt;LOG&gt;</code>, overwriting if necessary.</li>
+<li><code>-q</code>, <code>--quiet</code> : Disable all logging (<strong>WARNING</strong>: This even disables <em>ERROR</em> and <em>CRITICAL</em> level logs, which is probably not what you desire).</li>
+<li><code>-h</code>, <code>--help</code> : Show the help menu.</li>
+</ul>
+<h2 id="adding-examples"><a class="header" href="#adding-examples">Adding examples</a></h2>
+<p>To add another example, simply create a module in the <em>examples</em> directory! There are two ways to do this:</p>
+<ul>
+<li>If it is a small example, create a <em>.py</em> file for your example, making sure to add a <code>main()</code> function that receives all necessary arguments (this function is necessary, as it acts as the starting point for the example).</li>
+<li>If the example is larger and requires multiple files, create a directory within <em>examples</em> and add an <em>__init__.py</em> file which must contain the <code>main()</code> function.</li>
+</ul>
+<p>An important point to notice is that, as of currently, all arguments are passed to the <code>main()</code> function as a string. This means that it is the developer's responsability to transform them into the appropiate data type to avoid crashes or undefined behaviour (this will probably be fixed in the future for a nicer developer experience).</p>
+<p>Setting the correct path for the examples to import the currently cloned version is automatically done by the <em>examples</em> module, so all you need to do is import <em>watermelon</em> as if it was installed in your system.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="model"><a class="header" href="#model">Model</a></h1>
+<p>This part of the documentation focuses on the way <em>watermelon</em> models the problem using graphs, going into details on the classes and objects created for this purpose.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="graph-creation-and-usage"><a class="header" href="#graph-creation-and-usage">Graph creation and usage</a></h1>
+<h2 id="how-to-create-a-graph"><a class="header" href="#how-to-create-a-graph">How to create a graph</a></h2>
+<p>To create a graph, you must first initialize the corresponding vertices and edges, which are created by <code>Vertex</code> and <code>Edge</code>, respectively.</p>
+<p>For vertices, they each take:</p>
+<ul>
+<li>A unique identifier. This <strong>must</strong> be unique, since the program associates a singleton vertex for each identifier meaning that the following holds</li>
+</ul>
+<pre><code class="language-python">&gt;&gt;&gt; v1 = wm.Vertex(1, **properties)
+&gt;&gt;&gt; v2 = wm.Vertex(1)
+&gt;&gt;&gt; v1 is v2
+True
+</code></pre>
+<ul>
+<li>The capacity of the vertex. If it is not given, it assumes the vertex has infinite capacity.</li>
+<li>The type of vertex. We will talk more about these, but they indicate the purpose of the vertex in the graph.</li>
+</ul>
+<p>On the other hand, for edges each one takes:</p>
+<ul>
+<li>An origin and target vertex.</li>
+<li>An associated optional weight. This weight indicates the amount of energy in Wh that it takes to travel the edge in the graph.</li>
+<li>An optional time parameter, which indicates how long (in minutes) it takes to cross the edge.</li>
+</ul>
+<p>Once you have created all the necessary vertices and edges, you can create a graph using <code>Graph</code>. You can choose to initialize it directly with the vertices and edges, or initialize an empty graph and add them later using the <code>add_vertex/add_vertices</code> and <code>add_edge/add_edges</code> methods, respectively.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="vertex-types-and-actions"><a class="header" href="#vertex-types-and-actions">Vertex types and actions</a></h1>
+<h2 id="types--actions"><a class="header" href="#types--actions">Types &amp; actions</a></h2>
+<p>The idea behind the simulation of the graphs is that each vertex contains one (and only one) type, which indicates its functionality in the simulated reality. These types then allow specific actions, depending on the type.</p>
+<p>Each vertex and each action have a unique symbol associated to them, mostly for visualization purposes.</p>
+<p>The currently implemented vertex types are:</p>
+<ul>
+<li><code>EmptyVertexType</code> (Θ): Vertex that is not of a specific type, but rather a &quot;structural&quot; member.</li>
+<li><code>EVChargerType</code> (C): Charger for an electric vehicle.</li>
+<li><code>MaterialLoadType</code> (X): Point where material is loaded.</li>
+<li><code>MaterialDischargeType</code> (O): Point where material is depositted.</li>
+</ul>
+<p>The currently implemented actions are:</p>
+<ul>
+<li><code>NullAction</code> (ϕ): Doing nothing.</li>
+<li><code>ChargeBatteryAction</code> (c): Charging the battery of the vehicle.</li>
+<li><code>WaitAction</code> (w): Waiting for some time.</li>
+<li><code>LoadMaterialAction</code> (x): Loading material.</li>
+<li><code>DischargeMaterialAction</code> (o): Depositting material in the vertex.</li>
+</ul>
+<p>As said previously, the allowed actions depend on the type of the current vertex. The mapping between each type and the actions it allows is the following:</p>
+<ul>
+<li><code>EmptyVertexType</code>: ϕ, w</li>
+<li><code>EVChargerType</code>: ϕ, w, c</li>
+<li><code>MaterialLoadType</code>: ϕ, w, x</li>
+<li><code>MaterialDischargeType</code>: ϕ, w, o</li>
+</ul>
+<p>To add a new type, create a class that inherits from <code>VertexType</code> and implements the <code>char()</code> static method, which returns the unique character associated to that vertex type. It also has to contain a class attribute called <code>ACTIONS</code>, which corresponds to a list containing all the allowed actions.</p>
+<p>For a new action, the created class has to inherit from <code>VertexAction</code> and implement the <code>char()</code> static method, which returns the unique character that identifies that action, as well as the <code>_act()</code> method, which takes an agent and a vertex and determines the necessary time and energy to take the action. However, when using an action <strong>make sure to call the <code>act()</code> method</strong> instead of <code>_act()</code>: it acts as a wrapper for the latter, but it also does some important validations before calling it.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="agents"><a class="header" href="#agents">Agents</a></h1>
+<h2 id="agents-and-states"><a class="header" href="#agents-and-states">Agents and states</a></h2>
+<p>An agent is modelled by the <code>Agent</code> class, which contains:</p>
+<ul>
+<li>An identifier that, like with vertices, <strong>must</strong> be unique as the program associates a singleton to a specific identifier.</li>
+<li>The graph that the agent belongs to. Currently, the program doesn't use this information anywhere but, in the future, this might change so it is recommended to specify it anyways.</li>
+<li>A group of the decisions that the agent makes in the graph. These decisions are contained in the <code>Decision</code> data structure, which is essentially a tuple of vertices and actions intended to represent taking an action at a specific vertex.</li>
+<li>A state variable which represents the state of said agent at that moment. This is modelled by the <code>AgentState</code> data structure.</li>
+<li>A battery capacity in Wh, which indicates how much energy the battery holds.</li>
+<li>A material capacity in kg, which indicates how heavy of a payload the agent can carry.</li>
+<li>A model of the uncertainty involved in SOC estimation. The different models available and their functionality are specified in <a href="reference/model/agents.html#uncertainty-models">Uncertainty models</a>.</li>
+</ul>
+<p>The state corresponds to a dataclass which contains information about the current state of the agent. This information corresponds to the current vertex and action, the state of charge of the battery, the current payload, as well as status flags (is the agent finished, is it waiting, is it travelling, etc.). The following are all the attributes contained in the <code>AgentState</code> class:</p>
+<ul>
+<li><code>vertex</code>: Vertex the agent is in.</li>
+<li><code>action</code>: Action the agent is taking.</li>
+<li><code>_soc</code>: True state of charge. This can be accessed and set through the <code>soc</code> property, which makes sure the other properties are properly changed.</li>
+<li><code>payload</code>: Payload the agent is carrying.</li>
+<li><code>current_action</code>: Index of the current action the agent is taking.</li>
+<li><code>action_time</code>: Time the agent has taken to complete the current action.</li>
+<li><code>finished_action</code>: Whether the agent has finished the current action.</li>
+<li><code>is_waiting</code>: Whether the agent is waiting or not.</li>
+<li><code>is_done</code>: Whether the agent has finished all tasks.</li>
+<li><code>is_travelling</code>: Whether the agent is travelling.</li>
+<li><code>just_arrived</code>: Whether the agent has just arrived to a vertex.</li>
+<li><code>out_of_charge</code>: Whether the agent has ran out of charge.</li>
+<li><code>overcharged</code>: Whether the agent's battery has been overcharged.</li>
+</ul>
+<h2 id="state-of-charge"><a class="header" href="#state-of-charge">State of charge</a></h2>
+<p>Even though the true state of charge (accessible through the state of the agent) is available, this is only for simulation purposes. In the real world, the true state of charge can not be known so it must be estimated: this estimation leads to uncertainty, which can be modelled in different ways.</p>
+<p>In order to consider this uncertainty, users should use the <code>soc</code> property in the agent (not the one in the state), which takes into consideration the uncertainty model given when instancing the agent.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="state-of-charge--uncertainty"><a class="header" href="#state-of-charge--uncertainty">State of Charge &amp; Uncertainty</a></h1>
+<h2 id="uncertainty-models"><a class="header" href="#uncertainty-models">Uncertainty models</a></h2>
+<p>Since in the real world the State of Charge (SoC) of a battery can not be exactly known, it must be estimated. This estimation leads to errors which must be taken into consideration to develop a more robust model: thus, <em>watermelon</em> allows the user to specify some model for the uncertainty in the estimation of the SoC.</p>
+<p>Uncertainty is modelled by some random variable \(n(t)\), such that, if \(S_{\mathrm{C}}(t)\) corresponds to the true SoC at time \(t\in\mathbb{R}^+\), then the estimated SoC is given by</p>
+<p>\[ \widehat S_{\mathrm{C}}(t) = S_{\mathrm{C}}(t) + n(t) \]</p>
+<p>Different models for \(n(t)\) can be defined, all of which inherit from the base class <code>UncertaintySource</code> and must implement the <code>last()</code> and <code>sample()</code> methods, which give the last sample and generate a new sample, respectively. The ones currently implemented in <em>watermelon</em> are:</p>
+<ul>
+<li><code>NoUncertainty</code>: This means the estimation is perfect and has no error, meaning \(\forall t, n(t) = 0\).</li>
+<li><code>GaussianUncertainty</code>: In this model, \(n(t)\sim\operatorname{N}\left(\mu, \sigma^2\right)\), where typically \(\mu = 0\). In this case, \(\sigma\) is associated to the level of uncertainty in the measurement, and the real SoC can be further estimated through some other statistical technique (such as Kalman filtering).</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="simulator"><a class="header" href="#simulator">Simulator</a></h1>
+<p>The simulator is the part of the program that takes a given model, and simulates the times and energy consumptions of the agents on the given environment.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="simulator-functionality"><a class="header" href="#simulator-functionality">Simulator functionality</a></h1>
+<h2 id="how-it-works"><a class="header" href="#how-it-works">How it works</a></h2>
+<p>The simulator is contained by the <code>Simulator</code> class, which is the object that determines the parameters that the simulation uses. This object contains two attributes <code>params</code> and <code>control</code>, which are instances of the classes <code>SimulationParameters</code> and <code>SimulationControl</code>, respectively. It also contains the class used for the data extractor (of which we talk about in <a href="reference/simulator/data_extractor.html">Data extractors</a>), as well as the current instance being used.</p>
+<p><code>SimulationParameters</code> handles the parameters of &quot;the world&quot;, i.e. things like the efficiency of batteries. These are all attributes that are shared amongst all agents, and are intended to be changeable by the user.</p>
+<p>On the other hand, the <code>SimulationControl</code> class handles properties and information of the simulation itself, such as the current simulation time, which time step to use, etc.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="data-extractors"><a class="header" href="#data-extractors">Data extractors</a></h1>
+<h2 id="what-is-a-data-extractor"><a class="header" href="#what-is-a-data-extractor">What is a data extractor</a></h2>
+<p>A data extractor in <em>watermelon</em> is an object that stores all the data of the simulation in some desired format. In the code, these are classes that inherit from the <code>SimulationDataExtractor</code> trait, which must implement the <code>_initialize()</code>, <code>_append()</code> methods and the <code>extract_data()</code> static method. The purpose of these is:</p>
+<ul>
+<li><code>_initialize()</code>: Initialize the <code>data</code> attribute to the necessary data type. This depends on the implementation.</li>
+<li><code>_append()</code>: This is called on each iteration of the simulation, and its implementation depends on the type of the stored data.</li>
+<li><code>extract_data()</code>: This static method is the one that extracts data from the <code>SimulatorData</code> object. It must return data in a format that <code>_initialize</code> and <code>_append</code> can understand.</li>
+</ul>
+<p>Something important to note is that, similar to how agent actions are handled internally, while the methods that are implemented are <code>_initialize</code> and <code>_append</code>, when using <em>watermelon</em> you have to call <code>initialize</code> and <code>append</code> instead, respectively. These methods handle the data formatting and extraction internally.</p>
+<p>Another thing to note is that, while <code>extract_data()</code> takes an instance of the <code>SimulatorData</code> object, because of duck typing and the way the data is laid out you can directly pass it an instance of <code>Simulator</code> instead, and the data will be extracted from the current state without any issue.</p>
+<h2 id="default-implementations"><a class="header" href="#default-implementations">Default implementations</a></h2>
+<h3 id="pandas-dataframeextractor"><a class="header" href="#pandas-dataframeextractor">Pandas <code>DataFrameExtractor</code></a></h3>
+<p>Currently, the only implemented data extractor (and thus the one that <code>Simulator</code> uses by default) is <code>DataFrameExtractor</code>, which stores the data as a <code>pandas.DataFrame</code> object. In this DataFrame, each column represents an agent and each row a time step, and every cell contains a <code>DataElement</code> object that handles the storing of the current and past decision, as well as the state of each agent. It also handles how the data is displayed to the users.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="solver"><a class="header" href="#solver">Solver</a></h1>
+<p>The solver in <em>watermelon</em> is the component that finds the optimal location of chargers in the graph.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="optimization-problem"><a class="header" href="#optimization-problem">Optimization problem</a></h1>
+<p>The optimization problem that <em>watermelon</em> tries to solve is made of two parts:</p>
+<ul>
+<li>First, for a given distribution of chargers we need to find the sequence of decisions that the agents must take in order to minimize some statistic of the total time.</li>
+<li>Having the mechanism to find the optimal decisions, we find the distribution of chargers that maximizes the &quot;utility&quot;.</li>
+</ul>
+<h2 id="agent-routing-problem-arp"><a class="header" href="#agent-routing-problem-arp">Agent Routing Problem (ARP)</a></h2>
+<p>For the ARP, the mathematical formulation is</p>
+<p>\[
+\min_{\delta^{(1)}, \dots, \delta^{(M)}} \mathcal{T}\left(\left.\delta^{(1)}, \dots, \delta^{(M)}\right|\mathbf{x}\right)
+\]
+where \(\mathcal{T}: S(\mathcal{V}\times A)\rightarrow \mathbb{R}\) is some statistic of the time it takes for all agents, with \(S(\mathcal{V}\times A)\) the space of all sequences of a vertex-action tuple. A basic statistic consists of a cumulative statistic \(\mathcal{T}_{\mathrm{c}}\) such that</p>
+<p>\[
+\mathcal{T}_{\mathrm{c}}\left(\left.\delta^{(1)}, \dots, \delta^{(M)}\right|\mathbf{x}\right) = \sum _{\xi_i\in\Xi}T\left(\delta^{(i)}\right)
+\]
+with \(\Xi\) the set of all agents.</p>
+<h2 id="charger-location-problem-clp"><a class="header" href="#charger-location-problem-clp">Charger Location Problem (CLP)</a></h2>
+<p>On the other hand, for the CLP the formulation is</p>
+<p>\[
+\max_{\mathbf{x}\in\{0, 1\}^{|V|}} \lambda C(\mathbf{x}) + (1 - \lambda)T(\mathbf{x})
+\]
+where \(C(\cdot)\) is the cost function, \(T(\cdot)\) is the time function, and \(\lambda\) is a hyperparameter to balance between prioritizing costs or times.</p>
+<h3 id="modelling-costs"><a class="header" href="#modelling-costs">Modelling costs</a></h3>
+<p>The proposed cost function is of the form</p>
+<p>\[
+C(\mathbf{x}) = \sum_{n\geq 0}\frac{\mathbf{c}_n^{\mathrm{T}}\mathbf{x}}{\left(1 + r\right)^{n}}
+\]
+where \(\mathbf{c}_n\in\mathbb{R}^{|V|}\) refers to the cost at period \(n\), such that each of its components indicates the cost of a specific vertex. \(r\) is a discount rate, which is used to project future costs to the present.</p>
+<p>Assuming that there are only two unique costs, an initial cost \(\mathbf{c}_0\) and an operation cost \(\mathbf{c}\), the cost function can be expressed as</p>
+<p>\[
+C(\mathbf{x}) = \left(\mathbf{c}_0 + \frac{\mathbf{c}}{r}\right)^{\mathrm{T}}\mathbf{x}
+\]</p>
+<h3 id="modelling-times"><a class="header" href="#modelling-times">Modelling times</a></h3>
+<p>In order to model the penalization of times, it is necessary to solve the ARP and extract the best solution out of it. This solution for some charger distribution \(\mathbf{x}\) is passed back to the statistic, and its additive inverse is then used as the reward.</p>
+<p>Formalizing this, suppose the sequences \(d^{(1)}, \dots, d^{(M)}\) are the solution to the ARP for some distribution \(\mathbf{x}\). Then, the time reward is defined as</p>
+<p>\[
+T(\mathbf{x}) = -\mathcal{T}\left(\left.d^{(1)}, \dots, d^{(M)}\right|\mathbf{x}\right)
+\]
+with \(\mathcal{T}\) the same statistic that was chosen in the ARP.</p>
+<div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="architecture"><a class="header" href="#architecture">Architecture</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="encoding"><a class="header" href="#encoding">Encoding</a></h1>
+<p>Since there are two problems to solve, each one requires a different encoding scheme. For this reason, we will separate between the coding scheme for the graph and for the agent decisions.</p>
+<p>Encoders are represented by the \(\Phi\) operator, indexed with the context in which it is used, while the decoder is simply the inverse of said encoder.</p>
+<h2 id="clp-encoding"><a class="header" href="#clp-encoding">CLP encoding</a></h2>
+<p>For the CLP, since \(\mathbf{x}\) is a vector of 0's and 1's, the trivial encoding would be to flatten it into a string. Thus, the encoding function \(\Phi_{\mathbf{x}}: \{0, 1\}^{|V|}\rightarrow \mathbb{B}_{|V|}\) is given by</p>
+<p>\[
+\Phi_{\mathbf{x}}(\mathbf{x}) = x_1x_2\dots x_{|V|}
+\]</p>
+<p>Having the encoder, the decoder is trivial to obtain, and is given by</p>
+<p>\[
+\Phi_{\mathbf{x}}^{-1}\left(x_1x_2\dots x_{|V|}\right) = \left(\begin{matrix}
+x_1 \\
+x_2 \\
+\vdots \\
+x_{|V|}
+\end{matrix}\right)
+\]</p>
+<h2 id="arp-encoding"><a class="header" href="#arp-encoding">ARP encoding</a></h2>
+<p>While the encoding scheme for the CLP is trivial, the one used for the ARP is much more difficult to obtain.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
